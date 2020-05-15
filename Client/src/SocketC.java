@@ -24,7 +24,7 @@ public class SocketC implements Serializable {
         }
     }
 
-    public static void send(information information) throws IOException {
+    public static void send(Information information) throws IOException {
         String path =null;
                 //"C:\\Users\\dns\\Desktop\\ooo.txt";
         int portS = 0;

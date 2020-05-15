@@ -4,8 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.PriorityQueue;
 import java.util.Scanner;
 
 /**
@@ -16,7 +14,7 @@ public class MainC {
 
     public static void main() throws Exception {
         String host = "localhost";
-        int port = 4000;
+        int port = 8000;
         Client client = new Client();
         client.connect(host, port);
         System.out.println("Введите имя файла");
@@ -29,6 +27,10 @@ public class MainC {
 
                 if (Files.exists(Paths.get(FILENAME)) && Files.isReadable(Paths.get(FILENAME)) && Files.isWritable(Paths.get(FILENAME))) {
                     fileInputStream = new FileInputStream(FILENAME);
+                    Information file = new Information();
+                    file.file = new File(FILENAME);
+                    file.cmdtype="file";
+                    client.run(file);
                     break;
                 } else {
                     if (Files.exists(Paths.get(FILENAME)) && (Files.isReadable(Paths.get(FILENAME)) == false | Files.isWritable(Paths.get(FILENAME)) == false)) {
@@ -47,9 +49,7 @@ public class MainC {
                 if (FILENAME.equalsIgnoreCase("exit")) System.exit(0);
             }
         }
-        information file = new information();
-        file.file = new File(FILENAME);
-        file.cmdtype="file";
+
 
         Scanner scanner1 = new Scanner(System.in);
         String cmd = "";
@@ -58,12 +58,12 @@ public class MainC {
             cmd = scanner1.nextLine();
             cmd = cmd.trim();
             if (cmd.equalsIgnoreCase("help") == true) {
-                information help = new information();
+                Information help = new Information();
                 help.cmdtype = "help";
                 client.run(help);
             } else {
                 if (cmd.equalsIgnoreCase("info") == true) {
-                    information info = new information();
+                    Information info = new Information();
                     info.cmdtype = "info";
                     client.run(info);
                 } else {
@@ -189,7 +189,7 @@ public class MainC {
                         while (true) {
                             try {
                                 long check5 = Long.valueOf(substr[10]);
-                                information add = new information();
+                                Information add = new Information();
                                 add.cmdtype = "add";
                              //   add.arrayList.addAll(Arrays.asList(substr));
                                 add.setParametrs(substr[0], substr[1], substr[2], substr[3], substr[4], substr[5], substr[6], substr[7], substr[8], substr[9], substr[10]);
@@ -204,7 +204,7 @@ public class MainC {
 
                     } else {
                         if (cmd.equalsIgnoreCase("show") == true) {
-                            information show = new information();
+                            Information show = new Information();
                             show.cmdtype = "show";
                             client.run(show);
                         } else {
@@ -216,7 +216,7 @@ public class MainC {
                                 while (true) {
                                     try {
                                         Integer check = Integer.valueOf(id);
-                                        information remove_by_id = new information();
+                                        Information remove_by_id = new Information();
                                         remove_by_id.cmdtype = "remove_by_id";
                                        // remove_by_id.arrayList.add(id);
                                         remove_by_id.idstr=id;
@@ -229,17 +229,17 @@ public class MainC {
                                 }
                             } else {
                                 if (cmd.equalsIgnoreCase("clear") == true) {
-                                    information clear = new information();
+                                    Information clear = new Information();
                                     clear.cmdtype = "clear";
                                     client.run(clear);
                                 } else {
                                     if (cmd.equalsIgnoreCase("head") == true) {
-                                        information head = new information();
+                                        Information head = new Information();
                                         head.cmdtype = "head";
                                         client.run(head);
                                     } else {
                                         if (cmd.equalsIgnoreCase("remove_head") == true) {
-                                            information remove_head = new information();
+                                            Information remove_head = new Information();
                                             remove_head.cmdtype = "remove_head";
                                             client.run(remove_head);
                                         } else {
@@ -396,7 +396,7 @@ public class MainC {
                                                         substr[10] = scanner.nextLine();
                                                     }
                                                 }
-                                                information update = new information();
+                                                Information update = new Information();
                                                 update.cmdtype = "update";
                                                 update.idstr = id;
                                                 update.setParametrs(substr[0], substr[1], substr[2], substr[3], substr[4], substr[5], substr[6], substr[7], substr[8], substr[9], substr[10]);
@@ -416,7 +416,7 @@ public class MainC {
                                                             string = scanner.nextLine();
                                                         }
                                                     }
-                                                    information remove_lover = new information();
+                                                    Information remove_lover = new Information();
                                                     remove_lover.cmdtype = "remove_lover";
                                                    // remove_lover.arrayList.add(count);
                                                     remove_lover.count= String.valueOf(count);
@@ -434,7 +434,7 @@ public class MainC {
                                                                 form = form.trim();
                                                             } else break;
                                                         }
-                                                        information remove_any_by_form_of_education = new information();
+                                                        Information remove_any_by_form_of_education = new Information();
                                                         remove_any_by_form_of_education.cmdtype = "remove_any_by_form_of_education";
                                                        // remove_any_by_form_of_education.arrayList.add(form);
                                                         remove_any_by_form_of_education.form=form;
@@ -444,7 +444,7 @@ public class MainC {
                                                             String name;
                                                             int index1 = cmd.lastIndexOf(" ");
                                                             name = cmd.substring(index1 + 1);
-                                                            information filter_starts_with_name = new information();
+                                                            Information filter_starts_with_name = new Information();
                                                             filter_starts_with_name.cmdtype = "filter_starts_with_name";
                                                             filter_starts_with_name.name=name;
                                                            // SocketC.send(filter_starts_with_name);
@@ -457,7 +457,7 @@ public class MainC {
                                                                 while (true) {
                                                                     try {
                                                                         long cou = Long.parseLong(count);
-                                                                        information filter_greater_than_students_count = new information();
+                                                                        Information filter_greater_than_students_count = new Information();
                                                                         filter_greater_than_students_count.cmdtype = "filter_greater_than_students_count";
                                                                         filter_greater_than_students_count.count= String.valueOf(cou);
                                                                         client.run(filter_greater_than_students_count);
@@ -476,9 +476,9 @@ public class MainC {
                                                                         try {
                                                                             int index1 = cmd.lastIndexOf(" ");
                                                                             path = cmd.substring(index1);
-                                                                            information execute_script = new information();
+                                                                            Information execute_script = new Information();
                                                                             execute_script.cmdtype = "execute_script";
-                                                                            execute_script.arrayList.add(path);
+                                                                           // execute_script.arrayList.add(path);
                                                                             break;
                                                                         } catch (StringIndexOutOfBoundsException e) {
                                                                             System.out.println("Введите имя файла");
@@ -511,38 +511,4 @@ public class MainC {
 
 }
 
-class information implements Serializable {
-    String answer;
-    File file;
-    String cmdtype;
-    ArrayList arrayList = new ArrayList();
-    PriorityQueue priorityQueue = new PriorityQueue();
-    String name;
-    String count;
-    String exp;
-    String form;
-    String semestr;
-    String groupAdmin;
-    String height;
-    String weight;
-    String eyeColor;
-    String X;
-    String Y;
-    String idstr;
-
-    public void setParametrs(String name, String count, String exp, String form, String semestr, String groupAdmin, String height, String weight, String eyeColor, String X, String Y) {
-        this.count = count;
-        this.name = name;
-        this.exp = exp;
-        this.form = form;
-        this.eyeColor = eyeColor;
-        this.semestr = semestr;
-        this.groupAdmin = groupAdmin;
-        this.height = height;
-        this.weight = weight;
-        this.X = X;
-        this.Y = Y;
-    }
-    public String getAnswer(){return answer;}
-}
 

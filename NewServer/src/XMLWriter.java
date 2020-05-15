@@ -1,5 +1,3 @@
-package com.company;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -32,7 +30,7 @@ public class XMLWriter {
             Document doc = builder.newDocument();
             // создаем корневой элемент
             Element rootElement =
-                    doc.createElement("com.company.StudyGroup");
+                    doc.createElement("StudyGroup");
             // добавляем корневой элемент в объект Document
             doc.appendChild(rootElement);
 
@@ -73,7 +71,7 @@ public class XMLWriter {
     }
 
     // метод для создания нового узла XML-файла
-    private static Node getStudent(Document doc, Integer id, String name, long count, Float X, Double Y, String exp, com.company.Enum.FormOfEducation form, String groupAdmin, com.company.Enum.Semester semester, Double height, Integer weight, com.company.Enum.Color eyeColor) {
+    private static Node getStudent(Document doc, Integer id, String name, long count, Float X, Double Y, String exp, Enum.FormOfEducation form, String groupAdmin, Enum.Semester semester, Double height, Integer weight, Enum.Color eyeColor) {
         Element StudyGroup = doc.createElement("Student");
 
         // устанавливаем атрибуты

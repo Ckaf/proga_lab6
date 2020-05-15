@@ -1,5 +1,3 @@
-package com.company;
-
 /**
  * It seems that this is where we store and set the group admin data
  */
@@ -27,12 +25,12 @@ public class Person {
             System.out.println("Ошибка в заполнении данных, программа прерывает работу");
             System.exit(0);
         }
-        if (eyeColor.equalsIgnoreCase("black")) this.eyeColor = com.company.Enum.Color.BLACK;
+        if (eyeColor.equalsIgnoreCase("black")) this.eyeColor = Enum.Color.BLACK;
         else {
-            if (eyeColor.equalsIgnoreCase("red")) this.eyeColor = com.company.Enum.Color.RED;
+            if (eyeColor.equalsIgnoreCase("red")) this.eyeColor = Enum.Color.RED;
             else {
-                if (eyeColor.equalsIgnoreCase("orange")) this.eyeColor = com.company.Enum.Color.ORANGE;
-                else if (eyeColor.equalsIgnoreCase("brown")) this.eyeColor = com.company.Enum.Color.BROWN;
+                if (eyeColor.equalsIgnoreCase("orange")) this.eyeColor = Enum.Color.ORANGE;
+                else if (eyeColor.equalsIgnoreCase("brown")) this.eyeColor = Enum.Color.BROWN;
                 else {
                     System.out.println("Ошибка в заполнении данных, программа прерывает работу");
                     System.exit(0);
@@ -46,16 +44,16 @@ public class Person {
         return height;
     }
 
-    public com.company.Enum.Color getColor() {
+    public Enum.Color getColor() {
         return eyeColor;
 
     }
 
     public void setEyeColor(String color) {
-        if (color.equalsIgnoreCase("black")) this.eyeColor = com.company.Enum.Color.BLACK;
-        if (color.equalsIgnoreCase("red")) this.eyeColor = com.company.Enum.Color.RED;
-        if (color.equalsIgnoreCase("orange")) this.eyeColor = com.company.Enum.Color.ORANGE;
-        if (color.equalsIgnoreCase("brown")) this.eyeColor = com.company.Enum.Color.BROWN;
+        if (color.equalsIgnoreCase("black")) this.eyeColor = Enum.Color.BLACK;
+        if (color.equalsIgnoreCase("red")) this.eyeColor = Enum.Color.RED;
+        if (color.equalsIgnoreCase("orange")) this.eyeColor = Enum.Color.ORANGE;
+        if (color.equalsIgnoreCase("brown")) this.eyeColor = Enum.Color.BROWN;
     }
 
     public String getAdminName() {

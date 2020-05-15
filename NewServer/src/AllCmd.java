@@ -1,5 +1,3 @@
-package com.company;
-
 import java.io.*;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
@@ -11,7 +9,7 @@ import java.util.Iterator;
 import java.util.Queue;
 import java.util.Scanner;
 
-import static com.company.Enum.FormOfEducation.*;
+
 
 /**
  * This class describes how commands work
@@ -23,6 +21,7 @@ public class AllCmd {
     private static int BUFFER_SIZE = 2048;
     static ByteBuffer byteBuffer = ByteBuffer.allocate(BUFFER_SIZE);
     static String answer;
+    static Answer answerr;
     public static void help() throws SocketException {
         answer="info : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)\n"+
         "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении\n"+
@@ -42,6 +41,7 @@ public class AllCmd {
        // byteBuffer.put(Byte.parseByte(string));
       //  information information=new information();
        // information.answer=string;
+        answerr.answer=answer;
     }
 
     public static void info(Queue<StudyGroup> StudyGroupPriorityQueue) throws SocketException {
@@ -49,7 +49,7 @@ public class AllCmd {
         for (StudyGroup student : StudyGroupPriorityQueue) i++;
 
         answer = "тип коллекции:PriorityQueue " + "кол-во элементов: " + i + " дата инициализации: " + StudyGroupPriorityQueue.peek().getCreationDate();
-
+        answerr.answer=answer;
 
 
     }
@@ -58,6 +58,7 @@ public class AllCmd {
         for (StudyGroup student : StudyGroupPriorityQueue) {
             answer = "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId() + " Имя админа: " + student.getAdminName()
                     + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY();
+            answerr.answer=answer;
         }
     }
 
@@ -86,7 +87,7 @@ public class AllCmd {
                 coordinates.setX(X);
                 coordinates.setY(Y);
                  answer = "Данные обновлены";
-
+                answerr.answer=answer;
             }
 
             if (StudyGroupPriorityQueue == null) break;
@@ -410,10 +411,10 @@ public class AllCmd {
             StudyGroup studyGroup = StudyGroupPriorityQueue.peek();
             answer = "Имя: " + studyGroup.getName() + " Номер:" + studyGroup.getStudentsCount() + " " + studyGroup.getexp() + " Форма обучения: " + studyGroup.getFormOfEducation() + " Id: " + studyGroup.getId()
                     + " Рост админа: " + studyGroup.getHeight() + " Вес админа: " + studyGroup.getWeight() + " Цвет глаз админа: " + studyGroup.getColor() + " Координата X: " + studyGroup.getCoordinatesX() + " Координата Y: " + studyGroup.getCoordinatesY();
-
+            answerr.answer=answer;
         } catch (NullPointerException e) {
             answer = "Нет здесь никакого первого элемента";
-
+            answerr.answer=answer;
         }
     }
 
@@ -448,19 +449,19 @@ public class AllCmd {
 
 
             if (form.equalsIgnoreCase("time")) {
-                if (iterator.next().getFormOfEducation().equals(FULL_TIME_EDUCATION)) {
+                if (iterator.next().getFormOfEducation().equals(Enum.FormOfEducation.FULL_TIME_EDUCATION)) {
                     iterator.remove();
                     break;
                 }
             }
             if (form.equalsIgnoreCase("distance")) {
-                if (iterator.next().getFormOfEducation().equals(DISTANCE_EDUCATION)) {
+                if (iterator.next().getFormOfEducation().equals(Enum.FormOfEducation.DISTANCE_EDUCATION)) {
                     iterator.remove();
                     break;
                 }
             }
             if (form.equalsIgnoreCase("evening")) {
-                if (iterator.next().getFormOfEducation().equals(EVENING_CLASSES)) {
+                if (iterator.next().getFormOfEducation().equals(Enum.FormOfEducation.EVENING_CLASSES)) {
                     iterator.remove();
                     break;
                 }
@@ -478,7 +479,7 @@ public class AllCmd {
             if (student.getName().indexOf(name) == 0) {
                 answer = "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
                         + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY();
-
+                answerr.answer=answer;
             }
         }
     }
@@ -488,11 +489,16 @@ public class AllCmd {
             if (student.getStudentsCount() > count) {
                 answer = "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
                         + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY();
+                answerr.answer=answer;
 
             }
         }
+
     }
-   public String getAnswer(){return answer;}
+
+
+
+    public static Answer getAnswer(){return answerr;}
 }
 
 

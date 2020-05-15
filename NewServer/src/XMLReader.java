@@ -1,5 +1,3 @@
-package com.company;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -12,7 +10,6 @@ import java.io.FileInputStream;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Scanner;
 
 /**
  * Reading data from a file
@@ -20,12 +17,12 @@ import java.util.Scanner;
 public class XMLReader {
     //private static final String FILENAME = "src\\com\\company\\list";
     public static String FILENAME;
-
+    static Queue<StudyGroup> StudyGroupPriorityQueue = null;
     public static void main(FileInputStream fileInputStream) throws Exception {
-        System.out.println("Введите имя файла");
+       /* System.out.println("Введите имя файла");
         Scanner scanner = new Scanner(System.in);
         FILENAME = scanner.nextLine();
-
+*/
         // Получение фабрики, чтобы после получить билдер документов.
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -60,9 +57,10 @@ public class XMLReader {
         //Класс BufferedInputStream накапливает вводимые данные в специальном буфере без постоянного обращения к устройству ввода.
         // Запарсили XML, создав структуру Document. Теперь у нас есть доступ ко всем элементам, каким нам нужно.
         Document document = null;
-        while (true) {
+        document = builder.parse(bufferedInputStream);
+       /* while (true) {
             try {
-                document = builder.parse(bufferedInputStream);
+
                 break;
             } catch (Exception e) {
                 System.out.println("Введите имя заново или введите \"exit\"");
@@ -79,8 +77,10 @@ public class XMLReader {
 
             }
         }
+
+        */
         // Получение списка всех элементов Student внутри корневого элемента
-        Queue<StudyGroup> StudyGroupPriorityQueue = null;
+
         try {
 
             NodeList studentElements = document.getDocumentElement().getElementsByTagName("Student");
@@ -107,8 +107,7 @@ public class XMLReader {
             System.out.println("Файл не может быть обработан, программа заканчивает работу");
             System.exit(0);
         }
-
-        //  com.company.Main.main(StudyGroupPriorityQueue); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //  Main.main(StudyGroupPriorityQueue); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
 
@@ -121,8 +120,6 @@ public class XMLReader {
             return (int) (c1.getStudentsCount() - c2.getStudentsCount());
         }
     };
-
-
 
 
 }

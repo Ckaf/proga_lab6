@@ -1,9 +1,11 @@
-package com.company;
+
 
 //import clientServer.RunnableArgs;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 
@@ -11,9 +13,10 @@ public class Server {
     private DatagramSocket server;
     private boolean running;
     private ByteBuffer buffersend;
-    private int port=4000;
+    private int port=8000;
     static final int DEFAULT_BUFFER_SIZE = 65536;
-    static final SerializationManager<answer> responseSerializationManager = new SerializationManager<answer>();
+    static final SerializationManager<Answer> serializationManagerAnswer = new SerializationManager<Answer>();
+    static final SerializationManager<Information> serializationManager = new SerializationManager<Information>();
     private static final byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
     static SocketAddress address;
     static DatagramChannel channel;
@@ -36,13 +39,18 @@ public class Server {
                 ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
                 do {
                     address = channel.receive(byteBuffer);
-                } while (address == null);
-                answer answerr=new answer();
+                } while (address == null) ;
+               // Answer answerr=new Answer();
+
+                MessageHandling.AcceptedFile(buffer);
                 MessageHandling.Handling(buffer);
-
-
-                byte[] answer = responseSerializationManager.writeObject(answerr);
-               // System.out.println(answer);
+                Answer response=AllCmd.getAnswer();
+               // System.out.println();
+                byte[] answer = serializationManagerAnswer.writeObject(response);
+                //String test=serializationManagerAnswer.readObject(answer).getAnswer();
+                //System.out.println(test);
+             //   System.out.println(answerr.getAnswer());
+                System.out.println(answer);
                 byteBuffer = ByteBuffer.wrap(answer);
                 channel.send(byteBuffer, address);
             }

@@ -5,8 +5,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 
 public class Client {
-    private static final SerializationManager<information> commandSerializationManager = new SerializationManager<>();
-    private static final SerializationManager<information> responseSerializationManager = new SerializationManager<>();
+    private static final SerializationManager<Information> commandSerializationManager = new SerializationManager<>();
+    private static final SerializationManager<String> responseSerializationManager = new SerializationManager<>();
     DatagramChannel channel;
     private ByteBuffer buffer;
     private SocketAddress address;
@@ -15,6 +15,7 @@ public class Client {
     private ByteArrayInputStream input;
     private static SocketAddress socketAddress;
     private static DatagramSocket datagramSocket;
+
     public Client() {
         buffer = ByteBuffer.allocate(BUFFER_SIZE);
         buffer.clear();
@@ -33,29 +34,11 @@ public class Client {
 
     }
 
-   /* public void run(String host, int port, information information) throws IOException, ClassNotFoundException {
-        connect(host, port);
-        buffer = ByteBuffer.allocate(2048);
-        input = new ByteArrayInputStream(buffer.array());
-        ByteChannel byteChannel = null;
-       byteChannel.read(buffer);
-        buffer.clear();
-        ObjectInputStream objectInputStream = new ObjectInputStream(input);
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream((OutputStream) byteChannel);
-        while (channel.isConnected()) {
-            objectOutputStream.writeObject(information);
-            byteChannel.write(buffer);
-            channel.send(buffer, address);
-            buffer.clear();
-            address = channel.receive(buffer);
-            buffer= (ByteBuffer) objectInputStream.readObject();
-            System.out.println(buffer);
-        }
-  }
-  */
-    public ByteBuffer getBuffer(){return buffer;}
+    public ByteBuffer getBuffer() {
+        return buffer;
+    }
 
-    public static void run(information information) {
+    public static void run(Information information) {
         try {
             byte[] commandInBytes = commandSerializationManager.writeObject(information);
             DatagramPacket datagramPacket = new DatagramPacket(commandInBytes, commandInBytes.length, socketAddress);
@@ -65,14 +48,17 @@ public class Client {
             datagramPacket = new DatagramPacket(answerInBytes, answerInBytes.length);
             datagramSocket.setSoTimeout(TIMEOUT);
             try {
+
                 datagramSocket.receive(datagramPacket);
             } catch (SocketTimeoutException socketTimeoutException) {
-           //     throw new TimeoutError();
+                //     throw new TimeoutError();
             }
 
-            String result = responseSerializationManager.readObject(answerInBytes).getAnswer();
+            Answer result = new Answer();
+            String resultt = responseSerializationManager.readObject(answerInBytes);
+            result.setAnswer(resultt);
             System.out.println("Получен ответ от сервера: ");
-            System.out.print(result);
+            System.out.print(result.getAnswer());
 
           /*  if (command instanceof CommandExit) {
                 command.execute();

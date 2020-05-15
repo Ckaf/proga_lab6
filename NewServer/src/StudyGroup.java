@@ -1,5 +1,3 @@
-package com.company;
-
 import java.time.ZonedDateTime;
 import java.util.Iterator;
 import java.util.Queue;
@@ -15,8 +13,8 @@ public class StudyGroup {
     private ZonedDateTime creationDate;//Поле не может быть null, Значение этого поля должно генерироваться автоматически
     private long studentsCount;//Значение поля должно быть больше 0
     private Long expelledStudents;//Значение поля должно быть больше 0, Поле не может быть null
-    private com.company.Enum.FormOfEducation formOfEducation;//Поле не может быть null
-    private com.company.Enum.Semester semesterEnum;//Поле не может быть null
+    private Enum.FormOfEducation formOfEducation;//Поле не может быть null
+    private Enum.Semester semesterEnum;//Поле не может быть null
     private Person groupAdmin;//Поле не может быть null
 
     private String exp;
@@ -59,23 +57,23 @@ public class StudyGroup {
             expelledStudents=2L;
         }
         form=form.trim();
-        if (form.equals("full time") == true || form.equals("FULL_TIME_EDUCATION") == true) this.formOfEducation = com.company.Enum.FormOfEducation.FULL_TIME_EDUCATION;
+        if (form.equals("full time") == true || form.equals("FULL_TIME_EDUCATION") == true) this.formOfEducation = Enum.FormOfEducation.FULL_TIME_EDUCATION;
         else
-        if (form.equals("distance") == true|| form.equals("DISTANCE_EDUCATION") == true) this.formOfEducation = com.company.Enum.FormOfEducation.DISTANCE_EDUCATION;
+        if (form.equals("distance") == true|| form.equals("DISTANCE_EDUCATION") == true) this.formOfEducation = Enum.FormOfEducation.DISTANCE_EDUCATION;
         else
-        if (form.equals("evening") == true|| form.equals("EVENING_CLASSES") == true) this.formOfEducation = com.company.Enum.FormOfEducation.EVENING_CLASSES;
+        if (form.equals("evening") == true|| form.equals("EVENING_CLASSES") == true) this.formOfEducation = Enum.FormOfEducation.EVENING_CLASSES;
         else  {
             System.out.println("Ошибка в заполнении данных, программа прерывает работу");
             System.exit(0);
         }
         semestr=semestr.trim();
-        if (semestr.equals("FIFTH") == true || semestr.equals("5") == true ) this.semesterEnum = com.company.Enum.Semester.FIFTH;
+        if (semestr.equals("FIFTH") == true || semestr.equals("5") == true ) this.semesterEnum = Enum.Semester.FIFTH;
         else
-        if (semestr.equals("6") == true||semestr.equals("SIXTH") == true) this.semesterEnum = com.company.Enum.Semester.SIXTH;
+        if (semestr.equals("6") == true||semestr.equals("SIXTH") == true) this.semesterEnum = Enum.Semester.SIXTH;
         else
-        if (semestr.equals("7") == true||semestr.equals("SEVENTH") == true) this.semesterEnum = com.company.Enum.Semester.SEVENTH;
+        if (semestr.equals("7") == true||semestr.equals("SEVENTH") == true) this.semesterEnum = Enum.Semester.SEVENTH;
         else
-        if (semestr.equals("8") == true||semestr.equals("EIGHTH") == true) this.semesterEnum = com.company.Enum.Semester.EIGHTH;
+        if (semestr.equals("8") == true||semestr.equals("EIGHTH") == true) this.semesterEnum = Enum.Semester.EIGHTH;
         else  {
             System.out.println("Ошибка в заполнении данных, программа прерывает работу");
             System.exit(0);
@@ -118,7 +116,7 @@ public class StudyGroup {
         this.exp = exp;
     }
 
-    public com.company.Enum.FormOfEducation getFormOfEducation() {
+    public Enum.FormOfEducation getFormOfEducation() {
         return formOfEducation;
     }
 
@@ -127,16 +125,16 @@ public class StudyGroup {
     }
 
     public void setFormOfEducation(String form) {
-        if (form.equals("full time") == true) this.formOfEducation = com.company.Enum.FormOfEducation.FULL_TIME_EDUCATION;
-        if (form.equals("distance") == true) this.formOfEducation = com.company.Enum.FormOfEducation.DISTANCE_EDUCATION;
-        if (form.equals("evening") == true) this.formOfEducation = com.company.Enum.FormOfEducation.EVENING_CLASSES;
+        if (form.equals("full time") == true) this.formOfEducation = Enum.FormOfEducation.FULL_TIME_EDUCATION;
+        if (form.equals("distance") == true) this.formOfEducation = Enum.FormOfEducation.DISTANCE_EDUCATION;
+        if (form.equals("evening") == true) this.formOfEducation = Enum.FormOfEducation.EVENING_CLASSES;
     }
 
     public Double getHeight() {
         return groupAdmin.getHeight();
     }
 
-    public com.company.Enum.Color getColor() {
+    public Enum.Color getColor() {
         return groupAdmin.getColor();
     }
 
@@ -153,13 +151,13 @@ public class StudyGroup {
     }
 
     public void setSemesterEnum(String semestr) {
-        if (semestr.equals("5") == true) this.semesterEnum = com.company.Enum.Semester.FIFTH;
-        if (semestr.equals("6") == true) this.semesterEnum = com.company.Enum.Semester.SIXTH;
-        if (semestr.equals("7") == true) this.semesterEnum = com.company.Enum.Semester.SEVENTH;
-        if (semestr.equals("8") == true) this.semesterEnum = com.company.Enum.Semester.EIGHTH;
+        if (semestr.equals("5") == true) this.semesterEnum = Enum.Semester.FIFTH;
+        if (semestr.equals("6") == true) this.semesterEnum = Enum.Semester.SIXTH;
+        if (semestr.equals("7") == true) this.semesterEnum = Enum.Semester.SEVENTH;
+        if (semestr.equals("8") == true) this.semesterEnum = Enum.Semester.EIGHTH;
     }
 
-    public com.company.Enum.Semester getSemesterEnum() {
+    public Enum.Semester getSemesterEnum() {
         return semesterEnum;
     }
     public ZonedDateTime getCreationDate(){

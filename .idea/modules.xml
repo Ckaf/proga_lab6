@@ -3,7 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Client/Client.iml" filepath="$PROJECT_DIR$/Client/Client.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Server/Server.iml" filepath="$PROJECT_DIR$/Server/Server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/General/General.iml" filepath="$PROJECT_DIR$/General/General.iml" />
+      <module fileurl="file://$PROJECT_DIR$/NewServer/NewServer.iml" filepath="$PROJECT_DIR$/NewServer/NewServer.iml" />
       <module fileurl="file://$PROJECT_DIR$/proga_lab6.iml" filepath="$PROJECT_DIR$/proga_lab6.iml" />
     </modules>
   </component>
