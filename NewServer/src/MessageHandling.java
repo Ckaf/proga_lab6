@@ -49,10 +49,9 @@ public class MessageHandling {
             AllCmd.filter_starts_with_name(StudyGroupPriorityQueue, information.name);
         if (information.cmdtype.equalsIgnoreCase("filter_greater_than_students_count"))
             AllCmd.filter_greater_than_students_count(StudyGroupPriorityQueue, Long.parseLong(information.count));
+        if (information.cmdtype.equalsIgnoreCase("file")) AllCmd.file();
         Answer answer = new Answer();
         answer.answer = AllCmd.answer;
-        if (information.cmdtype.equalsIgnoreCase("file")) answer.answer="файл принят";
-
     }
 
 }

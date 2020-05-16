@@ -44,15 +44,17 @@ public class Server {
 
                 MessageHandling.AcceptedFile(buffer);
                 MessageHandling.Handling(buffer);
-                Answer response=AllCmd.getAnswer();
+                String response= String.valueOf(AllCmd.getAnswer());
+               // System.out.println(response.answer);
                // System.out.println();
-                byte[] answer = serializationManagerAnswer.writeObject(response);
-                //String test=serializationManagerAnswer.readObject(answer).getAnswer();
-                //System.out.println(test);
+                Answer resp=new Answer();
+                resp.setAnswer(response);
+                byte[] answer = serializationManagerAnswer.writeObject(resp);
              //   System.out.println(answerr.getAnswer());
-                System.out.println(answer);
+            //    System.out.println(answer);
                 byteBuffer = ByteBuffer.wrap(answer);
                 channel.send(byteBuffer, address);
+                byteBuffer.clear();
             }
         } catch (ClassNotFoundException | IOException | ClassCastException e) {
             e.printStackTrace();

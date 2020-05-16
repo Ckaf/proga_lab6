@@ -6,7 +6,7 @@ import java.nio.channels.DatagramChannel;
 
 public class Client {
     private static final SerializationManager<Information> commandSerializationManager = new SerializationManager<>();
-    private static final SerializationManager<String> responseSerializationManager = new SerializationManager<>();
+    private static final SerializationManager<Answer> responseSerializationManager = new SerializationManager<>();
     DatagramChannel channel;
     private ByteBuffer buffer;
     private SocketAddress address;
@@ -55,10 +55,10 @@ public class Client {
             }
 
             Answer result = new Answer();
-            String resultt = responseSerializationManager.readObject(answerInBytes);
-            result.setAnswer(resultt);
+             result = responseSerializationManager.readObject(answerInBytes);
             System.out.println("Получен ответ от сервера: ");
             System.out.print(result.getAnswer());
+            System.out.println();
 
           /*  if (command instanceof CommandExit) {
                 command.execute();

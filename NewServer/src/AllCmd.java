@@ -10,7 +10,6 @@ import java.util.Queue;
 import java.util.Scanner;
 
 
-
 /**
  * This class describes how commands work
  **/
@@ -21,27 +20,28 @@ public class AllCmd {
     private static int BUFFER_SIZE = 2048;
     static ByteBuffer byteBuffer = ByteBuffer.allocate(BUFFER_SIZE);
     static String answer;
-    static Answer answerr;
+    static Answer answerr=new Answer();
+
     public static void help() throws SocketException {
-        answer="info : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)\n"+
-        "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении\n"+
-        "add {element} : добавить новый элемент в коллекцию\n"+
-        "update id {element} : обновить значение элемента коллекции, id которого равен заданному\n"+
-        "remove_by_id id : удалить элемент из коллекции по его id\n"+
-        "clear : очистить коллекцию\n"+
-        "execute_script file_name : считать и исполнить скрипт из указанного файла. В скрипте содержатся команды в таком же виде, в котором их вводит пользователь в интерактивном режиме.\n"+
-        " exit : завершить программу (без сохранения в файл)\n"+
-        "head : вывести первый элемент коллекции\n"+
-        "remove_head : вывести первый элемент коллекции и удалить его\n"+
-        "remove_lower {element} : удалить из коллекции все элементы, меньшие, чем заданный\n"+
-        "remove_any_by_form_of_education formOfEducation : удалить из коллекции один элемент, значение поля formOfEducation которого эквивалентно заданному\n"+
-        "filter_starts_with_name name : вывести элементы, значение поля name которых начинается с заданной подстроки\n"+
-        "filter_greater_than_students_count studentsCount : вывести элементы, значение поля studentsCount которых больше заданного)";
-     //   byteBuffer.clear();
-       // byteBuffer.put(Byte.parseByte(string));
-      //  information information=new information();
-       // information.answer=string;
-        answerr.answer=answer;
+        answer = "info : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)\n" +
+                "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении\n" +
+                "add {element} : добавить новый элемент в коллекцию\n" +
+                "update id {element} : обновить значение элемента коллекции, id которого равен заданному\n" +
+                "remove_by_id id : удалить элемент из коллекции по его id\n" +
+                "clear : очистить коллекцию\n" +
+                "execute_script file_name : считать и исполнить скрипт из указанного файла. В скрипте содержатся команды в таком же виде, в котором их вводит пользователь в интерактивном режиме.\n" +
+                " exit : завершить программу (без сохранения в файл)\n" +
+                "head : вывести первый элемент коллекции\n" +
+                "remove_head : вывести первый элемент коллекции и удалить его\n" +
+                "remove_lower {element} : удалить из коллекции все элементы, меньшие, чем заданный\n" +
+                "remove_any_by_form_of_education formOfEducation : удалить из коллекции один элемент, значение поля formOfEducation которого эквивалентно заданному\n" +
+                "filter_starts_with_name name : вывести элементы, значение поля name которых начинается с заданной подстроки\n" +
+                "filter_greater_than_students_count studentsCount : вывести элементы, значение поля studentsCount которых больше заданного)";
+        //   byteBuffer.clear();
+        // byteBuffer.put(Byte.parseByte(string));
+        //  information information=new information();
+        // information.answer=string;
+        answerr.setAnswer(answer);
     }
 
     public static void info(Queue<StudyGroup> StudyGroupPriorityQueue) throws SocketException {
@@ -49,7 +49,7 @@ public class AllCmd {
         for (StudyGroup student : StudyGroupPriorityQueue) i++;
 
         answer = "тип коллекции:PriorityQueue " + "кол-во элементов: " + i + " дата инициализации: " + StudyGroupPriorityQueue.peek().getCreationDate();
-        answerr.answer=answer;
+        answerr.setAnswer(answer);
 
 
     }
@@ -58,7 +58,7 @@ public class AllCmd {
         for (StudyGroup student : StudyGroupPriorityQueue) {
             answer = "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId() + " Имя админа: " + student.getAdminName()
                     + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY();
-            answerr.answer=answer;
+            answerr.setAnswer(answer);
         }
     }
 
@@ -86,8 +86,8 @@ public class AllCmd {
                 person.setEyeColor(eyeColor);
                 coordinates.setX(X);
                 coordinates.setY(Y);
-                 answer = "Данные обновлены";
-                answerr.answer=answer;
+                answer = "Данные обновлены";
+                answerr.setAnswer(answer);
             }
 
             if (StudyGroupPriorityQueue == null) break;
@@ -411,10 +411,10 @@ public class AllCmd {
             StudyGroup studyGroup = StudyGroupPriorityQueue.peek();
             answer = "Имя: " + studyGroup.getName() + " Номер:" + studyGroup.getStudentsCount() + " " + studyGroup.getexp() + " Форма обучения: " + studyGroup.getFormOfEducation() + " Id: " + studyGroup.getId()
                     + " Рост админа: " + studyGroup.getHeight() + " Вес админа: " + studyGroup.getWeight() + " Цвет глаз админа: " + studyGroup.getColor() + " Координата X: " + studyGroup.getCoordinatesX() + " Координата Y: " + studyGroup.getCoordinatesY();
-            answerr.answer=answer;
+            answerr.setAnswer(answer);
         } catch (NullPointerException e) {
             answer = "Нет здесь никакого первого элемента";
-            answerr.answer=answer;
+            answerr.setAnswer(answer);
         }
     }
 
@@ -479,7 +479,7 @@ public class AllCmd {
             if (student.getName().indexOf(name) == 0) {
                 answer = "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
                         + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY();
-                answerr.answer=answer;
+                answerr.setAnswer(answer);
             }
         }
     }
@@ -489,16 +489,22 @@ public class AllCmd {
             if (student.getStudentsCount() > count) {
                 answer = "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
                         + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY();
-                answerr.answer=answer;
+                answerr.setAnswer(answer);
 
             }
         }
 
     }
 
+    public static void file() {
+        answer = "Файл передан";
+        answerr.setAnswer(answer);
+    }
 
 
-    public static Answer getAnswer(){return answerr;}
+    public static Answer getAnswer() {
+        return answerr;
+    }
 }
 
 
