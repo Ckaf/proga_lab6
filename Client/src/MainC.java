@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
@@ -12,7 +11,7 @@ import java.util.Scanner;
 public class MainC {
     public static String FILENAME;
 
-    public static void main() throws Exception {
+    public static void main(int i) throws Exception {
         String host = "localhost";
         int port = 8000;
         Client client = new Client();
@@ -30,6 +29,7 @@ public class MainC {
                     Information file = new Information();
                     file.file = new File(FILENAME);
                     file.cmdtype="file";
+                    file.number=i;
                     client.run(file);
                     break;
                 } else {
@@ -60,11 +60,13 @@ public class MainC {
             if (cmd.equalsIgnoreCase("help") == true) {
                 Information help = new Information();
                 help.cmdtype = "help";
+                help.number=i;
                 client.run(help);
             } else {
                 if (cmd.equalsIgnoreCase("info") == true) {
                     Information info = new Information();
                     info.cmdtype = "info";
+                    info.number=i;
                     client.run(info);
                 } else {
                     if (cmd.lastIndexOf("add") != -1) {
@@ -193,6 +195,7 @@ public class MainC {
                                 add.cmdtype = "add";
                              //   add.arrayList.addAll(Arrays.asList(substr));
                                 add.setParametrs(substr[0], substr[1], substr[2], substr[3], substr[4], substr[5], substr[6], substr[7], substr[8], substr[9], substr[10]);
+                                add.number=i;
                                 client.run(add);
                                 break;
                             } catch (NumberFormatException e) {
@@ -206,6 +209,7 @@ public class MainC {
                         if (cmd.equalsIgnoreCase("show") == true) {
                             Information show = new Information();
                             show.cmdtype = "show";
+                            show.number=i;
                             client.run(show);
                         } else {
                             if (cmd.lastIndexOf("remove_by_id") != -1) {
@@ -220,6 +224,7 @@ public class MainC {
                                         remove_by_id.cmdtype = "remove_by_id";
                                        // remove_by_id.arrayList.add(id);
                                         remove_by_id.idstr=id;
+                                        remove_by_id.number=i;
                                         client.run(remove_by_id);
                                         break;
                                     } catch (NumberFormatException e) {
@@ -231,16 +236,19 @@ public class MainC {
                                 if (cmd.equalsIgnoreCase("clear") == true) {
                                     Information clear = new Information();
                                     clear.cmdtype = "clear";
+                                    clear.number=i;
                                     client.run(clear);
                                 } else {
                                     if (cmd.equalsIgnoreCase("head") == true) {
                                         Information head = new Information();
                                         head.cmdtype = "head";
+                                        head.number=i;
                                         client.run(head);
                                     } else {
                                         if (cmd.equalsIgnoreCase("remove_head") == true) {
                                             Information remove_head = new Information();
                                             remove_head.cmdtype = "remove_head";
+                                            remove_head.number=i;
                                             client.run(remove_head);
                                         } else {
                                             if (cmd.lastIndexOf("update") != -1) {
@@ -400,6 +408,7 @@ public class MainC {
                                                 update.cmdtype = "update";
                                                 update.idstr = id;
                                                 update.setParametrs(substr[0], substr[1], substr[2], substr[3], substr[4], substr[5], substr[6], substr[7], substr[8], substr[9], substr[10]);
+                                                update.number=i;
                                                 client.run(update);
                                             } else {
                                                 if (cmd.equalsIgnoreCase("remove_lower") == true) {
@@ -420,6 +429,7 @@ public class MainC {
                                                     remove_lover.cmdtype = "remove_lover";
                                                    // remove_lover.arrayList.add(count);
                                                     remove_lover.count= String.valueOf(count);
+                                                    remove_lover.number=i;
                                                     client.run(remove_lover);
                                                 } else {
                                                     if (cmd.lastIndexOf("remove_any_by_form_of_education") != -1) {
@@ -438,6 +448,7 @@ public class MainC {
                                                         remove_any_by_form_of_education.cmdtype = "remove_any_by_form_of_education";
                                                        // remove_any_by_form_of_education.arrayList.add(form);
                                                         remove_any_by_form_of_education.form=form;
+                                                        remove_any_by_form_of_education.number=i;
                                                         client.run(remove_any_by_form_of_education);
                                                     } else {
                                                         if (cmd.lastIndexOf("filter_starts_with_name") != -1) {
@@ -447,7 +458,7 @@ public class MainC {
                                                             Information filter_starts_with_name = new Information();
                                                             filter_starts_with_name.cmdtype = "filter_starts_with_name";
                                                             filter_starts_with_name.name=name;
-                                                           // SocketC.send(filter_starts_with_name);
+                                                            filter_starts_with_name.number=i;
                                                             client.run(filter_starts_with_name);
                                                         } else {
                                                             if (cmd.lastIndexOf("filter_greater_than_students_count") != -1) {
@@ -460,6 +471,7 @@ public class MainC {
                                                                         Information filter_greater_than_students_count = new Information();
                                                                         filter_greater_than_students_count.cmdtype = "filter_greater_than_students_count";
                                                                         filter_greater_than_students_count.count= String.valueOf(cou);
+                                                                        filter_greater_than_students_count.number=i;
                                                                         client.run(filter_greater_than_students_count);
                                                                         break;
                                                                     } catch (NumberFormatException e) {

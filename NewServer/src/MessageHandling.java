@@ -1,36 +1,25 @@
-import java.io.*;
-import java.nio.channels.ByteChannel;
+import java.io.FileInputStream;
 import java.util.Queue;
 
 public class MessageHandling {
     static Queue<StudyGroup> StudyGroupPriorityQueue;
-    static ByteChannel byteChannel;
 
     private static final SerializationManager<Information> serializationManager = new SerializationManager<>();
     public static void AcceptedFile(byte[] buffer) throws Exception {
     Information information=serializationManager.readObject(buffer);
 
-       // ByteArrayInputStream byteStream = new ByteArrayInputStream(buffer);
-       // ObjectInputStream obs = new ObjectInputStream(byteStream);
-     //   ByteChannel byteChannel = null;
-      //  byteChannel.read(ByteBuffer.wrap(buffer));
-       // ObjectInputStream objectInputStream = new ObjectInputStream((InputStream) byteChannel);
-        //information information = (information) objectInputStream.readObject();
         if (information.cmdtype.equalsIgnoreCase("file")) {
             FileInputStream fileInputStream = new FileInputStream(information.file);
             XMLReader.main(fileInputStream);
-            System.out.println("файл передан");
-
         }
     }
 
     public static void Handling(byte[] buffer) throws Exception {
         StudyGroupPriorityQueue = XMLReader.StudyGroupPriorityQueue;
-        System.out.println(StudyGroupPriorityQueue);
-       // byteChannel.read(buffer);
         Information information=serializationManager.readObject(buffer);
 
         if (information.cmdtype.equalsIgnoreCase("help")) AllCmd.help();
+        if (information.cmdtype.equalsIgnoreCase("show"))AllCmd.show(StudyGroupPriorityQueue);
         if (information.cmdtype.equalsIgnoreCase("info")) AllCmd.info(StudyGroupPriorityQueue);
         if (information.cmdtype.equalsIgnoreCase("add"))
             AllCmd.add(information.name, information.count, information.exp, information.form, information.semestr, information.groupAdmin, information.height, information.weight, information.eyeColor, information.X, information.Y, StudyGroupPriorityQueue);
@@ -50,8 +39,7 @@ public class MessageHandling {
         if (information.cmdtype.equalsIgnoreCase("filter_greater_than_students_count"))
             AllCmd.filter_greater_than_students_count(StudyGroupPriorityQueue, Long.parseLong(information.count));
         if (information.cmdtype.equalsIgnoreCase("file")) AllCmd.file();
-        Answer answer = new Answer();
-        answer.answer = AllCmd.answer;
+
     }
 
 }

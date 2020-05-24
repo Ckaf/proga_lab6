@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<StudyGroup>
+    <Student count="1" name="Vasya" exp="yes" form="full time" semester="5" groupAdmin="Danya" height="175" weight="60"
+             eyeColor="red" X="23" Y="45"/>
+
+    <Student count="2" name="Boris" exp="yes" form="evening" semester="6" groupAdmin="Danya" height="170" weight="50"
+             eyeColor="black" X="25" Y="66"/>
+
+    <Student count="3" name="Dima" exp="yes" form="distance" semester="7" groupAdmin="Danya" height="190" weight="70"
+             eyeColor="brown" X="21" Y="90"/>
+</StudyGroup>

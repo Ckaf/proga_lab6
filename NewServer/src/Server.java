@@ -41,16 +41,15 @@ public class Server {
                     address = channel.receive(byteBuffer);
                 } while (address == null) ;
                // Answer answerr=new Answer();
-
                 MessageHandling.AcceptedFile(buffer);
                 MessageHandling.Handling(buffer);
-                String response= String.valueOf(AllCmd.getAnswer());
+                String response= String.valueOf(AllCmd.answerr.getAnswer());
                // System.out.println(response.answer);
                // System.out.println();
                 Answer resp=new Answer();
                 resp.setAnswer(response);
-                byte[] answer = serializationManagerAnswer.writeObject(resp);
-             //   System.out.println(answerr.getAnswer());
+                byte[] answer = serializationManagerAnswer.writeObject(AllCmd.answerr);
+              System.out.println(AllCmd.answerr.getAnswer());
             //    System.out.println(answer);
                 byteBuffer = ByteBuffer.wrap(answer);
                 channel.send(byteBuffer, address);

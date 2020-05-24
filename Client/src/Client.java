@@ -60,11 +60,6 @@ public class Client {
             System.out.print(result.getAnswer());
             System.out.println();
 
-          /*  if (command instanceof CommandExit) {
-                command.execute();
-            }
-
-           */
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

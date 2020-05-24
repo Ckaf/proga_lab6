@@ -3,8 +3,7 @@ import java.io.Serializable;
 
 class Information implements Serializable {
     String cmdtype;
-    //  ArrayList arrayList = new ArrayList();
-    // PriorityQueue priorityQueue = new PriorityQueue();
+    int number;
     File file;
     String name;
     String count;

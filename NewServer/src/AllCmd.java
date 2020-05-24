@@ -1,7 +1,5 @@
 import java.io.*;
 import java.net.SocketException;
-import java.nio.ByteBuffer;
-import java.nio.channels.ByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -14,13 +12,9 @@ import java.util.Scanner;
  * This class describes how commands work
  **/
 public class AllCmd {
-    static int port = 8000;
-    static Server server = new Server();
-    static ByteChannel byteChannel = null;
     private static int BUFFER_SIZE = 2048;
-    static ByteBuffer byteBuffer = ByteBuffer.allocate(BUFFER_SIZE);
     static String answer;
-    static Answer answerr=new Answer();
+    static Answer answerr = new Answer();
 
     public static void help() throws SocketException {
         answer = "info : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)\n" +
@@ -37,10 +31,6 @@ public class AllCmd {
                 "remove_any_by_form_of_education formOfEducation : удалить из коллекции один элемент, значение поля formOfEducation которого эквивалентно заданному\n" +
                 "filter_starts_with_name name : вывести элементы, значение поля name которых начинается с заданной подстроки\n" +
                 "filter_greater_than_students_count studentsCount : вывести элементы, значение поля studentsCount которых больше заданного)";
-        //   byteBuffer.clear();
-        // byteBuffer.put(Byte.parseByte(string));
-        //  information information=new information();
-        // information.answer=string;
         answerr.setAnswer(answer);
     }
 
@@ -55,16 +45,19 @@ public class AllCmd {
     }
 
     public static void show(Queue<StudyGroup> StudyGroupPriorityQueue) throws SocketException {
+        answer = "";
         for (StudyGroup student : StudyGroupPriorityQueue) {
-            answer = "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId() + " Имя админа: " + student.getAdminName()
-                    + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY();
-            answerr.setAnswer(answer);
+            String answer1 = "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId() + " Имя админа: " + student.getAdminName()
+                    + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY() + "\n";
+            answer = answer + answer1;
         }
+        answerr.setAnswer(answer);
     }
 
     public static void add(String name, String count, String exp, String form, String semestr, String groupAdmin, String height, String weight, String eyeColor, String X, String Y, Queue<StudyGroup> StudyGroupPriorityQueue) throws Exception {
         StudyGroupPriorityQueue.add(new StudyGroup(StudyGroupPriorityQueue, name, count, exp, form, semestr, groupAdmin, height, weight, eyeColor, X, Y));
-
+    answer="Элемент добавлен";
+    answerr.setAnswer(answer);
     }
 
     public static void update(Queue<StudyGroup> StudyGroupPriorityQueue, String idstr, String name, String count, String exp, String form, String semestr, String groupAdmin, String height, String weight, String eyeColor, String X, String Y) throws Exception {
@@ -101,6 +94,8 @@ public class AllCmd {
         Iterator<StudyGroup> iterator = StudyGroupPriorityQueue.iterator();
         while (iterator.hasNext())
             if (id.equals(iterator.next().getId())) iterator.remove();
+            answer="";
+            answerr.setAnswer(answer);
     }
 
     public static void clear(Queue<StudyGroup> StudyGroupPriorityQueue) {
@@ -108,7 +103,8 @@ public class AllCmd {
         for (StudyGroup student : StudyGroupPriorityQueue) i++;
         for (int i1 = 0; i1 < i; i1++)
             StudyGroupPriorityQueue.remove(StudyGroupPriorityQueue.iterator().next());
-
+        answer="";
+        answerr.setAnswer(answer);
     }
 
     public static void save(Queue<StudyGroup> StudyGroupPriorityQueue) throws FileNotFoundException {
@@ -116,8 +112,6 @@ public class AllCmd {
     }
 
     public static void execute_script(Queue<StudyGroup> StudyGroupPriorityQueue, String file_name) throws IOException {
-        //file_name = "C:\\Users\\dns\\Desktop\\cmd.txt";
-        //String path= String.valueOf(file_name);
         FileInputStream fileInputStream = null;
         while (true) {
             try {
@@ -420,6 +414,8 @@ public class AllCmd {
 
     public static void remove_head(Queue<StudyGroup> StudyGroupPriorityQueue) {
         StudyGroup studyGroup = StudyGroupPriorityQueue.poll();
+        answer="";
+        answerr.setAnswer(answer);
     }
 
     public static void remove_lover(Queue<StudyGroup> student, long count) {
@@ -429,6 +425,8 @@ public class AllCmd {
                 iterator.remove();
             }
         }
+        answer="";
+        answerr.setAnswer(answer);
     }
 
 
@@ -436,15 +434,6 @@ public class AllCmd {
 
         Iterator<StudyGroup> iterator = StudyGroupPriorityQueue.iterator();
         form = form.trim();
-       /* while (true) {
-           if (form.equalsIgnoreCase("time") == false && form.equalsIgnoreCase("distance") == false && form.equalsIgnoreCase("evening") == false) {
-                System.out.println("Введите форму обучения(full time,distance,evening)");
-                Scanner scanner = new Scanner(System.in);
-                form = scanner.nextLine();
-                form = form.trim();
-            } else break;
-        }
-        */
         while (iterator.hasNext()) {
 
 
@@ -467,12 +456,10 @@ public class AllCmd {
                 }
             }
 
-
-            //  System.out.println("===========");
         }
-
+        answer="";
+        answerr.setAnswer(answer);
     }
-    //}
 
     public static void filter_starts_with_name(Queue<StudyGroup> StudyGroupPriorityQueue, String name) throws SocketException {
         for (StudyGroup student : StudyGroupPriorityQueue) {
@@ -482,6 +469,7 @@ public class AllCmd {
                 answerr.setAnswer(answer);
             }
         }
+
     }
 
     public static void filter_greater_than_students_count(Queue<StudyGroup> StudyGroupPriorityQueue, long count) throws SocketException {
@@ -501,10 +489,6 @@ public class AllCmd {
         answerr.setAnswer(answer);
     }
 
-
-    public static Answer getAnswer() {
-        return answerr;
-    }
 }
 
 
