@@ -18,7 +18,8 @@ public class XMLReader {
     //private static final String FILENAME = "src\\com\\company\\list";
     public static String FILENAME;
     static Queue<StudyGroup> StudyGroupPriorityQueue = null;
-    public static void main(FileInputStream fileInputStream) throws Exception {
+    static User user;
+    public static void main(FileInputStream fileInputStream,int number) throws Exception {
         // Получение фабрики, чтобы после получить билдер документов.
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -59,6 +60,16 @@ public class XMLReader {
             System.out.println("Файл не может быть обработан, программа заканчивает работу");
             System.exit(0);
         }
+        //заполняем данные пользователя
+        int i=0;
+        while (i<MessageHandling.UserList.size()){
+            User user=MessageHandling.UserList.get(i);
+            if (user.number==number){
+                user.StudyGroup=StudyGroupPriorityQueue;
+                MessageHandling.UserList.set(i,user);
+            }
+            i++;
+        }
     }
 
 
@@ -71,8 +82,6 @@ public class XMLReader {
             return (int) (c1.getStudentsCount() - c2.getStudentsCount());
         }
     };
-
-
 }
 
 

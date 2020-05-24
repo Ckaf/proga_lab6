@@ -4,6 +4,7 @@ import java.io.Serializable;
 class Information implements Serializable {
     String cmdtype;
     int number;
+    int port;
     File file;
     String name;
     String count;

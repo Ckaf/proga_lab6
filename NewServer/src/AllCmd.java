@@ -40,8 +40,6 @@ public class AllCmd {
 
         answer = "тип коллекции:PriorityQueue " + "кол-во элементов: " + i + " дата инициализации: " + StudyGroupPriorityQueue.peek().getCreationDate();
         answerr.setAnswer(answer);
-
-
     }
 
     public static void show(Queue<StudyGroup> StudyGroupPriorityQueue) throws SocketException {

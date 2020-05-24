@@ -13,7 +13,7 @@ public class Server {
     private DatagramSocket server;
     private boolean running;
     private ByteBuffer buffersend;
-    private int port=8000;
+     static int port;
     static final int DEFAULT_BUFFER_SIZE = 65536;
     static final SerializationManager<Answer> serializationManagerAnswer = new SerializationManager<Answer>();
     static final SerializationManager<Information> serializationManager = new SerializationManager<Information>();
@@ -41,6 +41,7 @@ public class Server {
                     address = channel.receive(byteBuffer);
                 } while (address == null) ;
                // Answer answerr=new Answer();
+
                 MessageHandling.AcceptedFile(buffer);
                 MessageHandling.Handling(buffer);
                 String response= String.valueOf(AllCmd.answerr.getAnswer());
