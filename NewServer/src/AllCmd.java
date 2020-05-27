@@ -1,8 +1,6 @@
 import java.io.*;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.Scanner;
@@ -54,8 +52,8 @@ public class AllCmd {
 
     public static void add(String name, String count, String exp, String form, String semestr, String groupAdmin, String height, String weight, String eyeColor, String X, String Y, Queue<StudyGroup> StudyGroupPriorityQueue) throws Exception {
         StudyGroupPriorityQueue.add(new StudyGroup(StudyGroupPriorityQueue, name, count, exp, form, semestr, groupAdmin, height, weight, eyeColor, X, Y));
-    answer="Элемент добавлен";
-    answerr.setAnswer(answer);
+        answer = "Элемент добавлен";
+        answerr.setAnswer(answer);
     }
 
     public static void update(Queue<StudyGroup> StudyGroupPriorityQueue, String idstr, String name, String count, String exp, String form, String semestr, String groupAdmin, String height, String weight, String eyeColor, String X, String Y) throws Exception {
@@ -92,8 +90,8 @@ public class AllCmd {
         Iterator<StudyGroup> iterator = StudyGroupPriorityQueue.iterator();
         while (iterator.hasNext())
             if (id.equals(iterator.next().getId())) iterator.remove();
-            answer="";
-            answerr.setAnswer(answer);
+        answer = "Элемент удален";
+        answerr.setAnswer(answer);
     }
 
     public static void clear(Queue<StudyGroup> StudyGroupPriorityQueue) {
@@ -101,7 +99,7 @@ public class AllCmd {
         for (StudyGroup student : StudyGroupPriorityQueue) i++;
         for (int i1 = 0; i1 < i; i1++)
             StudyGroupPriorityQueue.remove(StudyGroupPriorityQueue.iterator().next());
-        answer="";
+        answer = "Коллекция очищена";
         answerr.setAnswer(answer);
     }
 
@@ -109,9 +107,9 @@ public class AllCmd {
         XMLWriter.write(StudyGroupPriorityQueue, XMLReader.FILENAME);
     }
 
-    public static void execute_script(Queue<StudyGroup> StudyGroupPriorityQueue, String file_name) throws IOException {
-        FileInputStream fileInputStream = null;
-        while (true) {
+    public static void execute_script(Queue<StudyGroup> StudyGroupPriorityQueue, File file) throws IOException {
+        FileInputStream fileInputStream = new FileInputStream(file);
+     /*   while (true) {
             try {
                 fileInputStream = new FileInputStream(file_name);
                 break;
@@ -125,6 +123,7 @@ public class AllCmd {
                 if (file_name.equalsIgnoreCase("exit")) System.exit(0);
             }
         }
+      */
         BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
         BufferedReader bufferedReader = new BufferedReader(
                 new InputStreamReader(bufferedInputStream, StandardCharsets.UTF_8));
@@ -146,9 +145,11 @@ public class AllCmd {
                 String substr[] = new String[12];
                 Scanner scanner = new Scanner(System.in);
 
-                System.out.println("Введите имя");
+                answer = "Введите имя";
+                answerr.setAnswer(answer);
                 substr[0] = scanner.nextLine();
-                System.out.println("Введите номер");
+                answer = "Введите номер";
+                answerr.setAnswer(answer);
 
                 substr[1] = scanner.nextLine();
                 long check;
@@ -157,23 +158,29 @@ public class AllCmd {
                         check = Long.parseLong(substr[1]);
                         break;
                     } catch (NumberFormatException e) {
-                        System.out.println("неправильный ввод,попробуем еще раз");
+                        answer = "неправильный ввод,попробуем еще раз";
+                        answerr.setAnswer(answer);
                         substr[1] = scanner.nextLine();
                     }
                 }
 
-                System.out.println("Введите отчислен ли студент(yes/no)");
+                answer = "Введите отчислен ли студент(yes/no)";
+                answerr.setAnswer(answer);
                 substr[2] = scanner.nextLine();
                 substr[2] = substr[2].trim();
                 while (true) {
                     if (substr[2].equalsIgnoreCase("yes")) break;
                     else {
                         if (substr[2].equalsIgnoreCase("no")) break;
-                        else System.out.println("неправильный ввод,попробуем еще раз");
+                        else {
+                            answer = "неправильный ввод,попробуем еще раз";
+                            answerr.setAnswer(answer);
+                        }
                         substr[2] = scanner.nextLine();
                     }
                 }
-                System.out.println("Введите форму обучения(full time, evening, distance)");
+                answer = "Введите форму обучения(full time, evening, distance)";
+                answerr.setAnswer(answer);
                 substr[3] = scanner.nextLine();
                 substr[3] = substr[3].trim();
                 while (true) {
@@ -182,12 +189,16 @@ public class AllCmd {
                         if (substr[3].equalsIgnoreCase("evening")) break;
                         else {
                             if (substr[3].equalsIgnoreCase("distance")) break;
-                            else System.out.println("неправильный ввод,попробуем еще раз");
+                            else {
+                                answer = "неправильный ввод,попробуем еще раз";
+                                answerr.setAnswer(answer);
+                            }
                             substr[3] = scanner.nextLine();
                         }
                     }
                 }
-                System.out.println("Введите номер семестра");
+                answer = "Введите номер семестра";
+                answerr.setAnswer(answer);
                 substr[4] = scanner.nextLine();
                 substr[4] = substr[4].trim();
                 while (true) {
@@ -195,17 +206,21 @@ public class AllCmd {
                         int check1 = Integer.parseInt(substr[4]);
                         if (check1 >= 5 & check1 <= 8) break;
                         else {
-                            System.out.println("неправильный ввод,попробуем еще раз");
+                            answer = "неправильный ввод,попробуем еще раз";
+                            answerr.setAnswer(answer);
                             substr[4] = scanner.nextLine();
                         }
                     } catch (NumberFormatException e) {
-                        System.out.println("неправильный ввод,попробуем еще раз");
+                        answer = "неправильный ввод,попробуем еще раз";
+                        answerr.setAnswer(answer);
                         substr[4] = scanner.nextLine();
                     }
                 }
-                System.out.println("Введите имя админа группы");
+                answer = "Введите имя админа группы";
+                answerr.setAnswer(answer);
                 substr[5] = scanner.nextLine();
-                System.out.println("Введите высоту");
+                answer = "Введите высоту";
+                answerr.setAnswer(answer);
                 substr[6] = scanner.nextLine();
                 substr[6] = substr[6].trim();
                 while (true) {
@@ -213,22 +228,26 @@ public class AllCmd {
                         Double check2 = Double.parseDouble(substr[6]);
                         break;
                     } catch (NumberFormatException e) {
-                        System.out.println("неправильный ввод,попробуем еще раз");
+                        answer = "неправильный ввод,попробуем еще раз";
+                        answerr.setAnswer(answer);
                         substr[6] = scanner.nextLine();
                     }
                 }
-                System.out.println("Введите вес");
+                answer = "Введите вес";
+                answerr.setAnswer(answer);
                 substr[7] = scanner.nextLine();
                 while (true) {
                     try {
                         Integer check3 = Integer.parseInt(substr[7]);
                         break;
                     } catch (NumberFormatException e) {
-                        System.out.println("неправильный ввод,попробуем еще раз");
+                        answer = "неправильный ввод,попробуем еще раз";
+                        answerr.setAnswer(answer);
                         substr[7] = scanner.nextLine();
                     }
                 }
-                System.out.println("Введите цвет глаз(red, black, brown, orange)");
+                answer = "Введите цвет глаз(red, black, brown, orange)";
+                answerr.setAnswer(answer);
                 substr[8] = scanner.nextLine();
                 substr[8].trim();
                 while (true) {
@@ -239,13 +258,15 @@ public class AllCmd {
                             if (substr[8].equalsIgnoreCase("brown")) break;
                             else {
                                 if (substr[8].equalsIgnoreCase("orange")) break;
-                                else System.out.println("неправильный ввод,попробуем еще раз");
+                                answer = "неправильный ввод,попробуем еще раз";
+                                answerr.setAnswer(answer);
                                 substr[8] = scanner.nextLine();
                             }
                         }
                     }
                 }
-                System.out.println("Введите X");
+                answer = "Введите X";
+                answerr.setAnswer(answer);
                 substr[9] = scanner.nextLine();
                 substr[9] = substr[9].trim();
                 while (true) {
@@ -253,11 +274,13 @@ public class AllCmd {
                         Float check4 = Float.parseFloat(substr[9]);
                         break;
                     } catch (NumberFormatException e) {
-                        System.out.println("неправильный ввод,попробуем еще раз");
+                        answer = "неправильный ввод,попробуем еще раз";
+                        answerr.setAnswer(answer);
                         substr[9] = scanner.nextLine();
                     }
                 }
-                System.out.println("Введите Y");
+                answer = "Введите Y";
+                answerr.setAnswer(answer);
                 substr[10] = scanner.nextLine();
                 substr[10] = substr[10].trim();
                 while (true) {
@@ -265,7 +288,8 @@ public class AllCmd {
                         long check5 = Long.valueOf(substr[10]);
                         break;
                     } catch (NumberFormatException e) {
-                        System.out.println("неправильный ввод,попробуем еще раз");
+                        answer = "неправильный ввод,попробуем еще раз";
+                        answerr.setAnswer(answer);
                         substr[10] = scanner.nextLine();
                     }
                 }
@@ -309,7 +333,8 @@ public class AllCmd {
                 try {
                     AllCmd.update(StudyGroupPriorityQueue, id, substr[0], substr[1], substr[3], substr[4], substr[5], substr[6], substr[7], substr[8], substr[9], substr[10], substr[11]);
                 } catch (Exception e) {
-                    System.out.println("Неправильный ввод данных");
+                    answer = "Неправильный ввод данных";
+                    answerr.setAnswer(answer);
                 }
             }
 
@@ -317,23 +342,7 @@ public class AllCmd {
                 System.out.println("Введите номер в списке (count)");
                 Scanner scanner = new Scanner(System.in);
                 long count = scanner.nextLong();
-                for (StudyGroup student : StudyGroupPriorityQueue) {
-                    if (student.getStudentsCount() == count) {
-                        System.out.println("Хотите удалить все элементы меньшие чем:");
-                        System.out.println("Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
-                                + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY());
-                        System.out.println("Введите yes\\no");
-                        Scanner scanner2 = new Scanner(System.in);
-                        String answer = scanner2.nextLine();
-                        answer = answer.trim();
-                        if (answer.equalsIgnoreCase("yes") == true) AllCmd.remove_lover(StudyGroupPriorityQueue, count);
-                        else {
-                            if (answer.equalsIgnoreCase("no") == true)
-                                System.out.println("Ничего не удаляем");
-                            else System.out.println("Что-то пошло не так, введите следующую команду");
-                        }
-                    }
-                }
+                AllCmd.remove_lover(StudyGroupPriorityQueue, count);
             }
 
 
@@ -364,7 +373,8 @@ public class AllCmd {
                         cou = Long.parseLong(count);
                         break;
                     } catch (Exception e) {
-                        System.out.println("Номер введен неправильно, попробуем еще раз");
+                        answer = "Номер введен неправильно, попробуем еще раз";
+                        answerr.setAnswer(answer);
                         Scanner scanner = new Scanner(System.in);
                         count = scanner.nextLine();
                         count = count.trim();
@@ -376,22 +386,29 @@ public class AllCmd {
             if (cmd.lastIndexOf("execute_script") != -1) {
                 //  String path;
                 int index1 = cmd.lastIndexOf(" ");
-                file_name = cmd.substring(index1);
-                System.out.println("Мы рискуем уйти в рекурсию, вы действительно хотите продолжить?(yes\\no)");
+                String file_name = cmd.substring(index1);
+                answer = "Мы рискуем уйти в рекурсию, вы действительно хотите продолжить?(yes\\no)";
+                answerr.setAnswer(answer);
                 while (true) {
                     Scanner scanner = new Scanner(System.in);
                     String answer = scanner.nextLine();
                     answer.trim();
                     if (answer.equalsIgnoreCase("yes") == true) {
-                        AllCmd.execute_script(StudyGroupPriorityQueue, file_name);
+                        File file1 = new File(file_name);
+                        AllCmd.execute_script(StudyGroupPriorityQueue, file1);
                         break;
                     } else {
                         if (answer.equalsIgnoreCase("no") == true) {
-                            System.out.println("Хороший выбор");
+                            answer = "Хороший выбор";
+                            answerr.setAnswer(answer);
                             break;
-                        } else System.out.println("Введите ответ еще раз");
+                        } else {
+                            answer = "Введите ответ еще раз";
+                            answerr.setAnswer(answer);
+                        }
                     }
                 }
+
             }
         }
 
@@ -412,7 +429,7 @@ public class AllCmd {
 
     public static void remove_head(Queue<StudyGroup> StudyGroupPriorityQueue) {
         StudyGroup studyGroup = StudyGroupPriorityQueue.poll();
-        answer="";
+        answer = "Элемент удален";
         answerr.setAnswer(answer);
     }
 
@@ -423,7 +440,7 @@ public class AllCmd {
                 iterator.remove();
             }
         }
-        answer="";
+        answer = "Элементы удалены";
         answerr.setAnswer(answer);
     }
 
@@ -455,7 +472,7 @@ public class AllCmd {
             }
 
         }
-        answer="";
+        answer = "Элементы удалены";
         answerr.setAnswer(answer);
     }
 
@@ -472,14 +489,15 @@ public class AllCmd {
 
     public static void filter_greater_than_students_count(Queue<StudyGroup> StudyGroupPriorityQueue, long count) throws SocketException {
         for (StudyGroup student : StudyGroupPriorityQueue) {
+            answer = "";
             if (student.getStudentsCount() > count) {
-                answer = "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
+                String answer1 = "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
                         + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY();
-                answerr.setAnswer(answer);
-
+                answer = answer + answer1;
+                System.out.println(count);
             }
         }
-
+        answerr.setAnswer(answer);
     }
 
     public static void file() {
