@@ -410,19 +410,17 @@ public class MainC {
                                                 update.number = i;
                                                 client.run(update);
                                             } else {
-                                                if (cmd.equalsIgnoreCase("remove_lower") == true) {
-                                                    System.out.println("Введите номер в списке (count)");
-                                                    scanner = new Scanner(System.in);
-                                                    String string = scanner.nextLine();
-                                                    long count;
-                                                    while (true) {
-                                                        try {
-                                                            count = Long.valueOf(string);
-                                                            break;
-                                                        } catch (NumberFormatException e) {
-                                                            System.out.println("Номер введен неправильно, попробуем еще раз");
-                                                            string = scanner.nextLine();
-                                                        }
+                                                if (cmd.lastIndexOf("remove_lower") != -1) {
+                                                    long count = 1;
+                                                    try {
+                                                        cmd = cmd.trim();
+                                                        int index1 = cmd.lastIndexOf(" ");
+                                                        count = Long.parseLong(cmd.substring(index1 + 1));
+                                                    } catch (Exception e) {
+                                                        System.out.println("Введите номер в списке (count)");
+                                                        scanner = new Scanner(System.in);
+                                                        String cou = scanner.nextLine();
+                                                        cmd = cmd + " " + cou;
                                                     }
                                                     Information remove_lover = new Information();
                                                     remove_lover.cmdtype = "remove_lover";
@@ -464,8 +462,6 @@ public class MainC {
                                                                 String count;
                                                                 int index1 = cmd.lastIndexOf(" ");
                                                                 count = cmd.substring(index1 + 1);
-                                                                System.out.println("================================");
-                                                                System.out.println(count);
                                                                 while (true) {
                                                                     try {
                                                                         long cou = Long.parseLong(count);
@@ -767,10 +763,18 @@ public class MainC {
                                                                             }
                                                                         }
 
-                                                                        if (cmd.equalsIgnoreCase("remove_lower") == true) {
-                                                                            System.out.println("Введите номер в списке (count)");
-                                                                            scanner = new Scanner(System.in);
-                                                                            long count = scanner.nextLong();
+                                                                        if (cmd.lastIndexOf("remove_lower") != -1) {
+                                                                            long count = 1;
+                                                                            try {
+                                                                                cmd = cmd.trim();
+                                                                                int index1 = cmd.lastIndexOf(" ");
+                                                                                count = Long.parseLong(cmd.substring(index1 + 1));
+                                                                            } catch (Exception e) {
+                                                                                System.out.println("Введите номер в списке (count)");
+                                                                                scanner = new Scanner(System.in);
+                                                                                String cou = scanner.nextLine();
+                                                                                cmd = cmd + " " + cou;
+                                                                            }
                                                                             Information execute = new Information();
                                                                             execute.cmdtype = "remove_lover";
                                                                             execute.count = String.valueOf(count);
@@ -780,9 +784,26 @@ public class MainC {
 
 
                                                                         if (cmd.lastIndexOf("remove_any_by_form_of_education") != -1) {
-                                                                            String form;
-                                                                            int index1 = cmd.lastIndexOf(" ");
-                                                                            form = cmd.substring(index1 + 1);
+                                                                            String form = null;
+                                                                            while (true) {
+                                                                                try {
+                                                                                    cmd=cmd.trim();
+                                                                                    int index1 = cmd.lastIndexOf(" ");
+                                                                                    form = cmd.substring(index1 + 1);
+                                                                                    if (form.equalsIgnoreCase("time")) break;
+                                                                                    else {
+                                                                                        if (form.equalsIgnoreCase("evening"))break;
+                                                                                        else {
+                                                                                            if (form.equalsIgnoreCase("distance"))break;
+                                                                                            else throw new Exception();
+                                                                                        }
+                                                                                    }
+                                                                                } catch (Exception e) {
+                                                                                    System.out.println("Введите форму обучения(full time\\evening\\distance)");
+                                                                                    form = scanner.nextLine();
+                                                                                    cmd = cmd + " " + form;
+                                                                                }
+                                                                            }
                                                                             form = form.trim();
                                                                             Information execute = new Information();
                                                                             execute.cmdtype = "remove_any_by_form_of_education";
@@ -804,7 +825,6 @@ public class MainC {
                                                                         }
 
                                                                         if (cmd.lastIndexOf("filter_greater_than_students_count") != -1) {
-                                                                            System.out.println("=============================");
                                                                             String count;
                                                                             int index1 = cmd.lastIndexOf(" ");
                                                                             count = cmd.substring(index1 + 1);
@@ -831,8 +851,20 @@ public class MainC {
 
                                                                         if (cmd.lastIndexOf("execute_script") != -1) {
                                                                             //  String path;
-                                                                            int index1 = cmd.lastIndexOf(" ");
-                                                                            String file_name = cmd.substring(index1);
+                                                                            String file_name=null;
+                                                                            while (true){
+                                                                           try {
+                                                                               int index1 = cmd.lastIndexOf(" ");
+                                                                                file_name = cmd.substring(index1);
+                                                                                break;
+                                                                           }
+                                                                           catch (StringIndexOutOfBoundsException e){
+                                                                               System.out.println("Введите путь к файлу");
+                                                                               scanner=new Scanner(System.in);
+                                                                               String string=scanner.nextLine();
+                                                                               cmd=cmd+" "+string;
+                                                                           }
+                                                                            }
                                                                             System.out.println("Мы рискуем уйти в рекурсию, вы действительно хотите продолжить?(yes\\no)");
                                                                             while (true) {
                                                                                 scanner = new Scanner(System.in);
@@ -851,7 +883,7 @@ public class MainC {
                                                                             }
                                                                         }
                                                                     }
-                                                                    }else {
+                                                                } else {
                                                                     if (cmd.equalsIgnoreCase("exit") != true)
                                                                         System.out.println("Команда введена неправильно");
                                                                 }

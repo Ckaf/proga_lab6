@@ -332,8 +332,20 @@ public class ExecuteScript {
 
             if (cmd.lastIndexOf("execute_script") != -1) {
                 //  String path;
-                int index1 = cmd.lastIndexOf(" ");
-                String file_name = cmd.substring(index1);
+                String file_name=null;
+                while (true)
+                    try {
+                        int index1 = cmd.lastIndexOf(" ");
+                        file_name = cmd.substring(index1);
+                        break;
+                    }
+                    catch (StringIndexOutOfBoundsException e){
+                        System.out.println("Введите путь к файлу");
+                        scanner=new Scanner(System.in);
+                        String string=scanner.nextLine();
+                        cmd=cmd+" "+string;
+                    }
+
                 System.out.println("Мы рискуем уйти в рекурсию, вы действительно хотите продолжить?(yes\\no)");
                 while (true) {
                     scanner = new Scanner(System.in);

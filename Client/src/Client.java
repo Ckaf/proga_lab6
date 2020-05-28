@@ -55,11 +55,14 @@ public class Client {
             }
 
             Answer result = new Answer();
-             result = responseSerializationManager.readObject(answerInBytes);
+            result = responseSerializationManager.readObject(answerInBytes);
             System.out.println("Получен ответ от сервера: ");
             System.out.print(result.getAnswer());
             System.out.println();
-
+            try {
+                if (result.getWrong() == 1) System.exit(0);
+            } catch (NullPointerException e) {
+            }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.logging.Level;
 
 /**
  * Reading data from a file
@@ -19,7 +20,9 @@ public class XMLReader {
     public static String FILENAME;
     static Queue<StudyGroup> StudyGroupPriorityQueue = null;
     static User user;
-    public static void main(FileInputStream fileInputStream,int number) throws Exception {
+    static int flag = 0;
+
+    public static void main(FileInputStream fileInputStream, int number) throws Exception {
         // Получение фабрики, чтобы после получить билдер документов.
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -30,12 +33,11 @@ public class XMLReader {
         //Класс BufferedInputStream накапливает вводимые данные в специальном буфере без постоянного обращения к устройству ввода.
         // Запарсили XML, создав структуру Document. Теперь у нас есть доступ ко всем элементам, каким нам нужно.
         Document document = null;
-        document = builder.parse(bufferedInputStream);
-
         // Получение списка всех элементов Student внутри корневого элемента
 
         try {
-
+            Logger.login(Level.INFO, "Принимаем пакет с файлом");
+            document = builder.parse(bufferedInputStream);
             NodeList studentElements = document.getDocumentElement().getElementsByTagName("Student");
 
 
@@ -54,19 +56,19 @@ public class XMLReader {
                         attributes.getNamedItem("weight").getNodeValue(), attributes.getNamedItem("eyeColor").getNodeValue(),
                         attributes.getNamedItem("X").getNodeValue(), attributes.getNamedItem("Y").getNodeValue()));
 
-
+                flag = 0;
             }
         } catch (Exception e) {
-            System.out.println("Файл не может быть обработан, программа заканчивает работу");
-            System.exit(0);
+            flag = 1;
+            Logger.login(Level.WARNING, "Файл невозможно обработать");
         }
         //заполняем данные пользователя
-        int i=0;
-        while (i<MessageHandling.UserList.size()){
-            User user=MessageHandling.UserList.get(i);
-            if (user.number==number){
-                user.StudyGroup=StudyGroupPriorityQueue;
-                MessageHandling.UserList.set(i,user);
+        int i = 0;
+        while (i < MessageHandling.UserList.size()) {
+            User user = MessageHandling.UserList.get(i);
+            if (user.number == number) {
+                user.StudyGroup = StudyGroupPriorityQueue;
+                MessageHandling.UserList.set(i, user);
             }
             i++;
         }

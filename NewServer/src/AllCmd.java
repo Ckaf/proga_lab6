@@ -339,7 +339,6 @@ public class AllCmd {
             }
 
             if (cmd.equalsIgnoreCase("remove_lower") == true) {
-                System.out.println("Введите номер в списке (count)");
                 Scanner scanner = new Scanner(System.in);
                 long count = scanner.nextLong();
                 AllCmd.remove_lover(StudyGroupPriorityQueue, count);
@@ -488,21 +487,28 @@ public class AllCmd {
     }
 
     public static void filter_greater_than_students_count(Queue<StudyGroup> StudyGroupPriorityQueue, long count) throws SocketException {
+        answer = "";
         for (StudyGroup student : StudyGroupPriorityQueue) {
-            answer = "";
             if (student.getStudentsCount() > count) {
                 String answer1 = "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
-                        + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY();
+                        + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY() + "\n";
                 answer = answer + answer1;
-                System.out.println(count);
             }
         }
         answerr.setAnswer(answer);
     }
 
     public static void file() {
-        answer = "Файл передан";
-        answerr.setAnswer(answer);
+        if (XMLReader.flag==1){
+            String answer="Файл не может быть обработан, программа заканчивает работу";
+            answerr.setAnswer(answer);
+            answerr.wrong=1;
+        }
+        else {
+            answerr.wrong=0;
+            answer = "Файл передан";
+            answerr.setAnswer(answer);
+        }
     }
 
 }

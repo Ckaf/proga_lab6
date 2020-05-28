@@ -8,7 +8,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
-
+import java.util.logging.Level;
 public class Server {
     private DatagramSocket server;
     private boolean running;
@@ -25,11 +25,12 @@ public class Server {
 
         address = new InetSocketAddress(port);
         try {
+            Logger.login(Level.INFO,"Начало работы сервера");
             channel = DatagramChannel.open();
             channel.configureBlocking(false);
             channel.bind(address);
         } catch (IOException e) {
-            //   throw new ConnectionError();
+            Logger.login(Level.WARNING,"Ошибка подключения");
         }
     }
 
@@ -45,13 +46,9 @@ public class Server {
                 MessageHandling.AcceptedFile(buffer);
                 MessageHandling.Handling(buffer);
                 String response= String.valueOf(AllCmd.answerr.getAnswer());
-               // System.out.println(response.answer);
-               // System.out.println();
                 Answer resp=new Answer();
                 resp.setAnswer(response);
                 byte[] answer = serializationManagerAnswer.writeObject(AllCmd.answerr);
-              System.out.println(AllCmd.answerr.getAnswer());
-            //    System.out.println(answer);
                 byteBuffer = ByteBuffer.wrap(answer);
                 channel.send(byteBuffer, address);
                 byteBuffer.clear();
