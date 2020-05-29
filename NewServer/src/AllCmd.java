@@ -94,7 +94,8 @@ public class AllCmd {
         answerr.setAnswer(answer);
     }
 
-    public static void clear(Queue<StudyGroup> StudyGroupPriorityQueue) {
+    public static void clear(Queue<StudyGroup> StudyGroupPriorityQueue)
+    {
         int i = 0;
         for (StudyGroup student : StudyGroupPriorityQueue) i++;
         for (int i1 = 0; i1 < i; i1++)
@@ -103,8 +104,10 @@ public class AllCmd {
         answerr.setAnswer(answer);
     }
 
-    public static void save(Queue<StudyGroup> StudyGroupPriorityQueue) throws FileNotFoundException {
-        XMLWriter.write(StudyGroupPriorityQueue, XMLReader.FILENAME);
+    public static void save(Queue<StudyGroup> StudyGroupPriorityQueue) throws IOException {
+        XMLWriter.write(StudyGroupPriorityQueue);
+        answerr.answer="Файл сохранен";
+        answerr.file=XMLWriter.file1;
     }
 
     public static void execute_script(Queue<StudyGroup> StudyGroupPriorityQueue, File file) throws IOException {
@@ -509,6 +512,10 @@ public class AllCmd {
             answer = "Файл передан";
             answerr.setAnswer(answer);
         }
+    }
+
+    public static void exit(){
+        answerr.wrong=2;
     }
 
 }

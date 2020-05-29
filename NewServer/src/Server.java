@@ -14,7 +14,7 @@ public class Server {
     private boolean running;
     private ByteBuffer buffersend;
      static int port;
-    static final int DEFAULT_BUFFER_SIZE = 65536;
+    static final int DEFAULT_BUFFER_SIZE = 131072;
     static final SerializationManager<Answer> serializationManagerAnswer = new SerializationManager<Answer>();
     static final SerializationManager<Information> serializationManager = new SerializationManager<Information>();
     private static final byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
@@ -46,8 +46,15 @@ public class Server {
                 MessageHandling.AcceptedFile(buffer);
                 MessageHandling.Handling(buffer);
                 String response= String.valueOf(AllCmd.answerr.getAnswer());
+               // System.out.println(AllCmd.answerr.getAnswer());
                 Answer resp=new Answer();
                 resp.setAnswer(response);
+                resp.wrong=AllCmd.answerr.wrong;
+                if (AllCmd.answerr.wrong==2){
+                    resp.file=AllCmd.answerr.file;
+
+                }
+                //System.out.println(resp.getAnswer());
                 byte[] answer = serializationManagerAnswer.writeObject(AllCmd.answerr);
                 byteBuffer = ByteBuffer.wrap(answer);
                 channel.send(byteBuffer, address);

@@ -1,11 +1,11 @@
-import java.io.File;
 import java.io.Serializable;
 
 class Information implements Serializable {
     String cmdtype;
     int number;
     int port;
-    File file;
+    int SIZE=16384;
+    byte[] file=new byte[SIZE];
     String name;
     String count;
     String exp;

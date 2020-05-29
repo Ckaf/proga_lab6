@@ -1,4 +1,4 @@
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.PriorityQueue;
@@ -13,7 +13,7 @@ public class MessageHandling {
 
     public static void AcceptedFile(byte[] buffer) throws Exception {
         Information information = serializationManager.readObject(buffer);
-        if (UserNumber.contains(information.number) == false) {
+        if (UserNumber.contains(information.number) == false ) {
             Logger.login(Level.INFO, "Подключается новый клиент с id: "+information.number);
             UserNumber.add(information.number);
             User user = new User();
@@ -21,7 +21,8 @@ public class MessageHandling {
             UserList.add(user);
         }else Logger.login(Level.INFO, "Пришел запрос от клиента с id: "+information.number);
         if (information.cmdtype.equalsIgnoreCase("file")) {
-            FileInputStream fileInputStream = new FileInputStream(information.file);
+
+            ByteArrayInputStream fileInputStream = new ByteArrayInputStream(information.file);
             XMLReader.main(fileInputStream, information.number);
         }
     }
@@ -88,6 +89,11 @@ public class MessageHandling {
                 if (information.cmdtype.equalsIgnoreCase("file")) {
                     AllCmd.file();
                     UserList.set(i, user);
+                }
+                if (information.cmdtype.equalsIgnoreCase("exit")){
+                    AllCmd.save(StudyGroupPriorityQueue);
+                    Logger.login(Level.INFO,"Сохраняем изменения");
+                    AllCmd.exit();
                 }
             }
         }

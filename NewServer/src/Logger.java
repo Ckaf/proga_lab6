@@ -1,7 +1,5 @@
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
-import java.util.logging.SimpleFormatter;
-import java.util.logging.StreamHandler;
 
 public class Logger {
     static java.util.logging.Logger LOGGER= java.util.logging.Logger.getLogger("ServerLogger");
@@ -17,7 +15,7 @@ public class Logger {
             System.out.println("Логирование в файл невозможно");
       }
      */
-        LOGGER.addHandler(new StreamHandler(System.out, new SimpleFormatter()));
+        //LOGGER.addHandler(new StreamHandler(System.out, new SimpleFormatter()));
         LOGGER.log(level,info);
 
     }

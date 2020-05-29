@@ -11,16 +11,23 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Queue;
+import java.util.logging.Level;
 
 /**
  * Writes the result to a file
  */
 public class XMLWriter {
-
-
-    public static void write(Queue<StudyGroup> StudyGroupPriorityQueue, String path) {
-
+   static byte[] ans=new byte[65536];
+   static Answer answer = new Answer();
+   static byte[] file1=new byte[16384];
+    public static void write(Queue<StudyGroup> StudyGroupPriorityQueue) throws IOException {
+        File f=new File("C:\\Users\\dns\\Desktop\\create");
+        f.createNewFile();
+        String path = f.getAbsolutePath();
+        answer.wrong=2;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
         try {
@@ -46,25 +53,28 @@ public class XMLWriter {
             // для красивого вывода
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             DOMSource source = new DOMSource(doc);
-
             //печатаем в файл
-            OutputStream out=new FileOutputStream(path);
+            OutputStream out = new FileOutputStream(path);
 
             try {
                 Writer outputStreamWriter = new OutputStreamWriter(out);
-                StreamResult file = new StreamResult(outputStreamWriter);
+               StreamResult file = new StreamResult(outputStreamWriter);
 
                 //записываем данные
-                transformer.transform(source, file);
+                transformer.transform(source,file);
                 out.close();
-                System.out.println("Создание XML файла закончено");
+                file1= Files.readAllBytes(Paths.get(path));
+               // answer.file=new File(path);
+
+                f.delete();
+                Logger.login(Level.INFO,"Создание XML файла закончено");
             } catch (TransformerException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } catch (NullPointerException e){
-            System.out.println("Сохранение не удалось");
+        } catch (NullPointerException e) {
+            Logger.login(Level.WARNING,"Сохранение не удалось");
         } catch (Exception e) {
             e.printStackTrace();
         }

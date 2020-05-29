@@ -6,7 +6,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -22,7 +22,7 @@ public class XMLReader {
     static User user;
     static int flag = 0;
 
-    public static void main(FileInputStream fileInputStream, int number) throws Exception {
+    public static void main(ByteArrayInputStream fileInputStream, int number) throws Exception {
         // Получение фабрики, чтобы после получить билдер документов.
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 

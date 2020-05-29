@@ -26,7 +26,7 @@ public class MainC {
                 if (Files.exists(Paths.get(FILENAME)) && Files.isReadable(Paths.get(FILENAME)) && Files.isWritable(Paths.get(FILENAME))) {
                     fileInputStream = new FileInputStream(FILENAME);
                     Information file = new Information();
-                    file.file = new File(FILENAME);
+                    file.file = Files.readAllBytes(Paths.get(FILENAME));
                     file.cmdtype = "file";
                     file.number = i;
                     client.run(file);
@@ -904,7 +904,13 @@ public class MainC {
                 }
             }
         }
-        if (cmd.equalsIgnoreCase("exit")) System.exit(0);
+        if (cmd.equalsIgnoreCase("exit")) {
+            Information information=new Information();
+            information.cmdtype="exit";
+            information.number=i;
+            Client.run(information);
+            Thread.sleep(1000);
+            System.exit(0);}
     }
 }
 
