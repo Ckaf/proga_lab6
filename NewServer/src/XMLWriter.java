@@ -24,7 +24,7 @@ public class XMLWriter {
    static Answer answer = new Answer();
    static byte[] file1=new byte[16384];
     public static void write(Queue<StudyGroup> StudyGroupPriorityQueue) throws IOException {
-        File f=new File("C:\\Users\\dns\\Desktop\\create");
+        File f=new File("create");
         f.createNewFile();
         String path = f.getAbsolutePath();
         answer.wrong=2;

@@ -1,4 +1,5 @@
 import java.io.ByteArrayInputStream;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.PriorityQueue;
@@ -6,24 +7,23 @@ import java.util.Queue;
 import java.util.logging.Level;
 
 public class MessageHandling {
-    static HashSet<Integer> UserNumber = new HashSet<>();
+    static HashSet<SocketAddress> UserNumber = new HashSet<java.net.SocketAddress>();
     static Queue<StudyGroup> StudyGroupPriorityQueue = new PriorityQueue<StudyGroup>();
     private static final SerializationManager<Information> serializationManager = new SerializationManager<>();
     static ArrayList<User> UserList = new ArrayList<>();
 
     public static void AcceptedFile(byte[] buffer) throws Exception {
         Information information = serializationManager.readObject(buffer);
-        if (UserNumber.contains(information.number) == false ) {
-            Logger.login(Level.INFO, "Подключается новый клиент с id: "+information.number);
-            UserNumber.add(information.number);
+        if (UserNumber.contains(Server.datagramPacket.getSocketAddress()) == false ) {
+            Logger.login(Level.INFO, "Подключается новый клиент с адресом: "+Server.datagramPacket.getSocketAddress());
+            UserNumber.add(Server.datagramPacket.getSocketAddress());
             User user = new User();
-            user.number = information.number;
+            user.number = Server.datagramPacket.getSocketAddress();
             UserList.add(user);
-        }else Logger.login(Level.INFO, "Пришел запрос от клиента с id: "+information.number);
+        }else Logger.login(Level.INFO, "Пришел запрос от клиента с адресом: "+Server.datagramPacket.getSocketAddress());
         if (information.cmdtype.equalsIgnoreCase("file")) {
-
             ByteArrayInputStream fileInputStream = new ByteArrayInputStream(information.file);
-            XMLReader.main(fileInputStream, information.number);
+            XMLReader.main(fileInputStream, Server.datagramPacket.getSocketAddress());
         }
     }
 
@@ -32,7 +32,7 @@ public class MessageHandling {
         Information information = serializationManager.readObject(buffer);
         for (int i = 0; i < UserList.size(); i++) {
             User user = UserList.get(i);
-            if (information.number == user.number) {
+            if (Server.datagramPacket.getSocketAddress().equals(user.number)) {
                 StudyGroupPriorityQueue = user.StudyGroup;
                 if (information.cmdtype.equalsIgnoreCase("help")) {
                     Logger.login(Level.INFO, "Принимаем пакет с коммандой help");

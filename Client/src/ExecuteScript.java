@@ -5,7 +5,7 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class ExecuteScript {
-    public static void execute(int i, String path) throws IOException {
+    public static void execute(String path) throws IOException, ClassNotFoundException {
         // String path;
         Scanner scanner1 = new Scanner(System.in);
         Scanner scanner = new Scanner(System.in);
@@ -42,14 +42,12 @@ public class ExecuteScript {
             if (cmd.equalsIgnoreCase("help") == true) {
                 Information execute = new Information();
                 execute.cmdtype = "help";
-                execute.number = i;
                 Client.run(execute);
             }
 
             if (cmd.equalsIgnoreCase("info") == true) {
                 Information execute = new Information();
                 execute.cmdtype = "info";
-                execute.number = i;
                 Client.run(execute);
             }
             if (cmd.lastIndexOf("add") != -1) {
@@ -198,7 +196,6 @@ public class ExecuteScript {
                     Information execute = new Information();
                     execute.cmdtype = "add";
                     execute.setParametrs(substr[0], substr[1], substr[2], substr[3], substr[4], substr[5], substr[6], substr[7], substr[8], substr[9], substr[10]);
-                    execute.number = i;
                     Client.run(execute);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -208,7 +205,6 @@ public class ExecuteScript {
             if (cmd.equalsIgnoreCase("show") == true) {
                 Information execute = new Information();
                 execute.cmdtype = "show";
-                execute.number = i;
                 Client.run(execute);
             }
 
@@ -218,7 +214,6 @@ public class ExecuteScript {
                 id = cmd.substring(index1);
                 Information execute = new Information();
                 execute.cmdtype = "remove_by_id";
-                execute.number = i;
                 execute.idstr = id;
                 Client.run(execute);
             }
@@ -226,24 +221,16 @@ public class ExecuteScript {
             if (cmd.equalsIgnoreCase("clear") == true) {
                 Information execute = new Information();
                 execute.cmdtype = "clear";
-                execute.number = i;
                 Client.run(execute);
             }
-
-                                                                    /*    if (cmd.equalsIgnoreCase("save") == true) {
-                                                                            AllCmd.save(StudyGroupPriorityQueue);
-                                                                        }
-                                                                    */
             if (cmd.equalsIgnoreCase("head") == true) {
                 Information execute = new Information();
                 execute.cmdtype = "head";
-                execute.number = i;
                 Client.run(execute);
             }
             if (cmd.equalsIgnoreCase("remove_head") == true) {
                 Information execute = new Information();
                 execute.cmdtype = "remove_head";
-                execute.number = i;
                 Client.run(execute);
             }
 
@@ -260,7 +247,6 @@ public class ExecuteScript {
                 try {
                     Information execute = new Information();
                     execute.cmdtype = "update";
-                    execute.number = i;
                     execute.setParametrs(substr[0], substr[1], substr[3], substr[4], substr[5], substr[6], substr[7], substr[8], substr[9], substr[10], substr[11]);
                     execute.idstr = id;
                     Client.run(execute);
@@ -276,7 +262,6 @@ public class ExecuteScript {
                 Information execute = new Information();
                 execute.cmdtype = "remove_lover";
                 execute.count = String.valueOf(count);
-                execute.number = i;
                 Client.run(execute);
             }
 
@@ -288,7 +273,6 @@ public class ExecuteScript {
                 form = form.trim();
                 Information execute = new Information();
                 execute.cmdtype = "remove_any_by_form_of_education";
-                execute.number = i;
                 execute.form = form;
                 Client.run(execute);
             }
@@ -300,7 +284,6 @@ public class ExecuteScript {
                 name = name.trim();
                 Information execute = new Information();
                 execute.cmdtype = "filter_starts_with_name";
-                execute.number = i;
                 execute.name = name;
                 Client.run(execute);
             }
@@ -324,7 +307,6 @@ public class ExecuteScript {
                 }
                 Information execute = new Information();
                 execute.cmdtype = "filter_greater_than_students_count";
-                execute.number = i;
                 execute.count = String.valueOf(cou);
                 Client.run(execute);
 
@@ -352,7 +334,7 @@ public class ExecuteScript {
                     String answer = scanner.nextLine();
                     answer.trim();
                     if (answer.equalsIgnoreCase("yes") == true) {
-                        ExecuteScript.execute(i, file_name);
+                        ExecuteScript.execute( file_name);
                         break;
                     } else {
                         if (answer.equalsIgnoreCase("no") == true) {

@@ -106,8 +106,9 @@ public class AllCmd {
 
     public static void save(Queue<StudyGroup> StudyGroupPriorityQueue) throws IOException {
         XMLWriter.write(StudyGroupPriorityQueue);
-        answerr.answer="Файл сохранен";
+        answerr.answer1="Файл сохранен";
         answerr.file=XMLWriter.file1;
+        answerr.wrong=2;
     }
 
     public static void execute_script(Queue<StudyGroup> StudyGroupPriorityQueue, File file) throws IOException {
