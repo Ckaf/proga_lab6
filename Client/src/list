@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <StudyGroup>
-<Student X="23.0" Y="45.0" count="1" exp="не отчислен" eyeColor="RED" form="FULL_TIME_EDUCATION" groupAdmin="Vasya" height="175.0" id="861104" name="Vasya" semester="FIFTH" weight="60"/>
-<Student X="25.0" Y="66.0" count="2" exp="не отчислен" eyeColor="BLACK" form="EVENING_CLASSES" groupAdmin="Boris" height="170.0" id="578578" name="Boris" semester="SIXTH" weight="50"/>
-<Student X="21.0" Y="90.0" count="3" exp="не отчислен" eyeColor="BROWN" form="DISTANCE_EDUCATION" groupAdmin="Dima" height="190.0" id="889680" name="Dima" semester="SEVENTH" weight="70"/>
+<Student X="23.0" Y="45.0" count="1" exp="не отчислен" eyeColor="RED" form="FULL_TIME_EDUCATION" groupAdmin="Vasya" height="175.0"  name="Vasya" semester="FIFTH" weight="60"/>
+<Student X="25.0" Y="66.0" count="2" exp="не отчислен" eyeColor="BLACK" form="EVENING_CLASSES" groupAdmin="Boris" height="170.0"  name="Boris" semester="SIXTH" weight="50"/>
+<Student X="21.0" Y="90.0" count="3" exp="не отчислен" eyeColor="BROWN" form="DISTANCE_EDUCATION" groupAdmin="Dima" height="190.0"  name="Dima" semester="SEVENTH" weight="70"/>
 </StudyGroup>

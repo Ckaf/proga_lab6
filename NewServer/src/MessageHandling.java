@@ -6,6 +6,9 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.logging.Level;
 
+/**
+ * A class that processes incoming commands
+ */
 public class MessageHandling {
     static HashSet<SocketAddress> UserNumber = new HashSet<java.net.SocketAddress>();
     static Queue<StudyGroup> StudyGroupPriorityQueue = new PriorityQueue<StudyGroup>();
@@ -23,17 +26,14 @@ public class MessageHandling {
         }else Logger.login(Level.INFO, "Пришел запрос от клиента с адресом: "+Server.datagramPacket.getSocketAddress());
         if (information.cmdtype.equalsIgnoreCase("file")) {
             ByteArrayInputStream fileInputStream = new ByteArrayInputStream(information.file);
-            XMLReader.main(fileInputStream, Server.datagramPacket.getSocketAddress());
+            XMLReader.main(fileInputStream);
         }
     }
 
     public static void Handling(byte[] buffer) throws Exception {
         //   StudyGroupPriorityQueue = XMLReader.StudyGroupPriorityQueue;
         Information information = serializationManager.readObject(buffer);
-        for (int i = 0; i < UserList.size(); i++) {
-            User user = UserList.get(i);
-            if (Server.datagramPacket.getSocketAddress().equals(user.number)) {
-                StudyGroupPriorityQueue = user.StudyGroup;
+
                 if (information.cmdtype.equalsIgnoreCase("help")) {
                     Logger.login(Level.INFO, "Принимаем пакет с коммандой help");
                     AllCmd.help();
@@ -88,16 +88,22 @@ public class MessageHandling {
                 }
                 if (information.cmdtype.equalsIgnoreCase("file")) {
                     AllCmd.file();
-                    UserList.set(i, user);
                 }
                 if (information.cmdtype.equalsIgnoreCase("exit")){
                     AllCmd.save(StudyGroupPriorityQueue);
                     Logger.login(Level.INFO,"Сохраняем изменения");
                     AllCmd.exit();
                 }
+                if (information.cmdtype.equalsIgnoreCase("connect")){
+                   if (StudyGroupPriorityQueue.stream().count()==0){
+                       AllCmd.answerr.wrong=-1;
+                   }
+                   else {
+                       AllCmd.answerr.wrong=0;
+                       AllCmd.answerr.answer="Коллекция уже существует, введите команду";
+                   }
+                }
             }
         }
-    }
 
-}
 

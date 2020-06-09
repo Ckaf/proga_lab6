@@ -13,7 +13,7 @@ public class Client {
     private static final int TIMEOUT = 5000;
     static SocketAddress address;
     static DatagramChannel channel;
-
+    static int flag;
     public Client() {
         buffer = ByteBuffer.allocate(BUFFER_SIZE);
         buffer.clear();
@@ -25,6 +25,9 @@ public class Client {
             channel = DatagramChannel.open();
             channel.configureBlocking(false);
             channel.connect(address);
+            Information information = new Information();
+            information.cmdtype = "connect";
+            run(information);
         } catch (IOException e) {
             System.out.println("Ошибка подключения");
         }
@@ -58,14 +61,17 @@ public class Client {
             } while (address == null);
             Answer result = new Answer();
             result = responseSerializationManager.readObject(answerInBytes);
-            if (result.wrong != 2) {
-                System.out.println("Получен ответ от сервера: ");
-                System.out.print(result.getAnswer());
-                System.out.println();
-                buffer.clear();
-            } else {
-                System.out.println(result.answer);
-                Saver.save(MainC.FILENAME, result);
+            if (result.wrong == -1) flag = 1;
+            else {
+                if (result.wrong != 2) {
+                    System.out.println("Получен ответ от сервера: ");
+                    System.out.print(result.getAnswer());
+                    System.out.println();
+                    buffer.clear();
+                } else {
+                    System.out.println(result.answer);
+                    Saver.save(MainC.FILENAME, result);
+                }
             }
             try {
                 if (result.getWrong() == 1) System.exit(0);

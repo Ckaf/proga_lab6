@@ -1,5 +1,9 @@
 import java.io.*;
 
+/**
+ * Class for serializing and deserializing objects
+ * @param <T>
+ */
 public class SerializationManager<T> {
     public byte[] writeObject(T object) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

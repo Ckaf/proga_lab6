@@ -1,12 +1,9 @@
+/**
+ * It seems that this is where we store and set the student's coordinates
+ */
 public class Coordinates {
     private float x;
     private Double y;//Поле не может быть null
-
-    /**
-     * It seems that this is where we store and set the student's coordinates
-     * @param x
-     * @param y
-     */
     public Coordinates(String x, String y) {
         try {
 

@@ -7,7 +7,7 @@ import java.util.Queue;
  */
 
 public class StudyGroup {
-    private Integer id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
+    Integer id=0; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name;//Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates;//Поле не может быть null
     private ZonedDateTime creationDate;//Поле не может быть null, Значение этого поля должно генерироваться автоматически
@@ -18,15 +18,10 @@ public class StudyGroup {
     private Person groupAdmin;//Поле не может быть null
 
     private String exp;
-    Integer checkid = 0;
-
-    public String time;
-    Integer i=0;
     public StudyGroup(Queue<StudyGroup> StudyGroupPriorityQueue, String name, String count, String exp, String form, String semestr, String groupAdmin, String height, String weight, String eyeColor, String X, String Y) throws Exception {
         //creationDate=creationDate.minusDays(0);
         creationDate=ZonedDateTime.now();
         Iterator<StudyGroup> it = StudyGroupPriorityQueue.iterator();
-        this.id = 0;
         this.name = name.trim();
         if (this.name == null | this.name.equalsIgnoreCase("") ) {
             System.out.println("Ошибка в заполнении данных, программа прерывает работу");
@@ -44,11 +39,8 @@ public class StudyGroup {
             System.out.println("Ошибка в заполнении данных, программа прерывает работу");
             System.exit(0);
         }
-        while (checkid == this.id) {
-            this.id = (int) (Math.random() * 1000000);
-        }
-        checkid = this.id;
-
+        Integer id = (int) (Math.random() * 1000000);
+        setId(id);
         if (exp.equals("yes") == true) {
             this.exp = "отчислен";
             expelledStudents=1L;
@@ -82,7 +74,8 @@ public class StudyGroup {
         this.coordinates = new Coordinates(X, Y);
     }
 
-
+public Person getGroupAdmin(){return groupAdmin;}
+public Coordinates getCoordinates(){return coordinates;}
 
     public String getName() {
         return name;
@@ -93,7 +86,7 @@ public class StudyGroup {
     }
 
     public Integer getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Integer id) {

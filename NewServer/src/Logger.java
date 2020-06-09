@@ -1,6 +1,9 @@
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 
+/**
+ * Class for logger
+ */
 public class Logger {
     static java.util.logging.Logger LOGGER= java.util.logging.Logger.getLogger("ServerLogger");
     static FileHandler fh;

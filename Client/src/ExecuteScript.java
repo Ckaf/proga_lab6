@@ -4,6 +4,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
+/**
+ * Class for the command execute_script
+ */
 public class ExecuteScript {
     public static void execute(String path) throws IOException, ClassNotFoundException {
         // String path;

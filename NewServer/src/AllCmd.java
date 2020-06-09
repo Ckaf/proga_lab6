@@ -1,16 +1,14 @@
-import java.io.*;
+import java.io.IOException;
 import java.net.SocketException;
-import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
+import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Scanner;
+import java.util.stream.Collectors;
 
 
 /**
  * This class describes how commands work
  **/
 public class AllCmd {
-    private static int BUFFER_SIZE = 2048;
     static String answer;
     static Answer answerr = new Answer();
 
@@ -32,21 +30,16 @@ public class AllCmd {
         answerr.setAnswer(answer);
     }
 
-    public static void info(Queue<StudyGroup> StudyGroupPriorityQueue) throws SocketException {
-        int i = 0;
-        for (StudyGroup student : StudyGroupPriorityQueue) i++;
-
-        answer = "тип коллекции:PriorityQueue " + "кол-во элементов: " + i + " дата инициализации: " + StudyGroupPriorityQueue.peek().getCreationDate();
+    public static void info(Queue<StudyGroup> StudyGroupPriorityQueue) {
+        answer = "тип коллекции:PriorityQueue " + "кол-во элементов: " + StudyGroupPriorityQueue.size() + " дата инициализации: " + StudyGroupPriorityQueue.peek().getCreationDate();
         answerr.setAnswer(answer);
     }
 
-    public static void show(Queue<StudyGroup> StudyGroupPriorityQueue) throws SocketException {
+    public static void show(Queue<StudyGroup> StudyGroupPriorityQueue) {
         answer = "";
-        for (StudyGroup student : StudyGroupPriorityQueue) {
-            String answer1 = "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId() + " Имя админа: " + student.getAdminName()
-                    + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY() + "\n";
-            answer = answer + answer1;
-        }
+        StudyGroupPriorityQueue.stream().forEach(student ->
+                answer = answer + "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId() + " Имя админа: " + student.getAdminName()
+                        + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY() + "\n");
         answerr.setAnswer(answer);
     }
 
@@ -54,64 +47,53 @@ public class AllCmd {
         StudyGroupPriorityQueue.add(new StudyGroup(StudyGroupPriorityQueue, name, count, exp, form, semestr, groupAdmin, height, weight, eyeColor, X, Y));
         answer = "Элемент добавлен";
         answerr.setAnswer(answer);
+        MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue;
     }
 
-    public static void update(Queue<StudyGroup> StudyGroupPriorityQueue, String idstr, String name, String count, String exp, String form, String semestr, String groupAdmin, String height, String weight, String eyeColor, String X, String Y) throws Exception {
+    public static void update(Queue<StudyGroup> StudyGroupPriorityQueue, String idstr, String name, String count, String exp, String form, String semestr, String groupAdmin, String height, String weight, String eyeColor, String X, String Y) {
         Integer id = Integer.parseInt(idstr);
-        Person person = new Person(groupAdmin, height, weight, eyeColor);
-        Coordinates coordinates = new Coordinates(X, Y);
-        for (StudyGroup student : StudyGroupPriorityQueue) {
-
-
-            if (id.equals(student.getId())) {
-                student.setName(name);
-                student.setStudentsCount(Long.parseLong(count));
-                student.setExp(exp);
-                student.setFormOfEducation(form);
-                student.setSemesterEnum(semestr);
-                person.setAdminName(groupAdmin);
-                person.setHeight(height);
-                person.setWeight(weight);
-                person.setEyeColor(eyeColor);
-                coordinates.setX(X);
-                coordinates.setY(Y);
-                answer = "Данные обновлены";
-                answerr.setAnswer(answer);
-            }
-
-            if (StudyGroupPriorityQueue == null) break;
-        }
+        Queue<StudyGroup> s = StudyGroupPriorityQueue.stream().filter(student -> student.getId().equals(id))
+                .peek(student -> student.setName(name))
+                .peek(student -> student.setStudentsCount(Long.parseLong(count)))
+                .peek(student -> student.setExp(exp))
+                .peek(student -> student.setFormOfEducation(form))
+                .peek(student -> student.setSemesterEnum(semestr))
+                .peek(student -> student.getGroupAdmin().setAdminName(groupAdmin))
+                .peek(student -> student.getGroupAdmin().setHeight(height))
+                .peek(student -> student.getGroupAdmin().setWeight(weight))
+                .peek(student -> student.getGroupAdmin().setEyeColor(eyeColor))
+                .peek(student -> student.getCoordinates().setX(X))
+                .peek(student -> student.getCoordinates().setY(Y)).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
+        StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().filter(student -> student.getId().equals(id) == false).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
+        Queue<StudyGroup> finalStudyGroupPriorityQueue = StudyGroupPriorityQueue;
+        s.stream().collect(Collectors.toCollection(() -> finalStudyGroupPriorityQueue));
+        MessageHandling.StudyGroupPriorityQueue = finalStudyGroupPriorityQueue;
+        answer = "Данные обновлены";
+        answerr.setAnswer(answer);
     }
 
 
     public static void remove_by_id(Queue<StudyGroup> StudyGroupPriorityQueue, String idstr) {
-        idstr.trim();
-        Integer id = Integer.valueOf(idstr);
-        Iterator<StudyGroup> iterator = StudyGroupPriorityQueue.iterator();
-        while (iterator.hasNext())
-            if (id.equals(iterator.next().getId())) iterator.remove();
+        Integer id = Integer.valueOf(idstr.trim());
         answer = "Элемент удален";
         answerr.setAnswer(answer);
+        MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().filter(student -> student.getId().equals(id) == false).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
     }
 
-    public static void clear(Queue<StudyGroup> StudyGroupPriorityQueue)
-    {
-        int i = 0;
-        for (StudyGroup student : StudyGroupPriorityQueue) i++;
-        for (int i1 = 0; i1 < i; i1++)
-            StudyGroupPriorityQueue.remove(StudyGroupPriorityQueue.iterator().next());
-        answer = "Коллекция очищена";
+    public static void clear(Queue<StudyGroup> StudyGroupPriorityQueue) {
+
+        MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().skip(StudyGroupPriorityQueue.size()).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
+        answer = "Коллекция очещена";
         answerr.setAnswer(answer);
     }
 
     public static void save(Queue<StudyGroup> StudyGroupPriorityQueue) throws IOException {
         XMLWriter.write(StudyGroupPriorityQueue);
-        answerr.answer1="Файл сохранен";
-        answerr.file=XMLWriter.file1;
-        answerr.wrong=2;
+        answerr.file = XMLWriter.file1;
+        answerr.wrong = 2;
     }
 
-    public static void execute_script(Queue<StudyGroup> StudyGroupPriorityQueue, File file) throws IOException {
+   /* public static void execute_script(Queue<StudyGroup> StudyGroupPriorityQueue, File file) throws IOException {
         FileInputStream fileInputStream = new FileInputStream(file);
      /*   while (true) {
             try {
@@ -127,7 +109,7 @@ public class AllCmd {
                 if (file_name.equalsIgnoreCase("exit")) System.exit(0);
             }
         }
-      */
+
         BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
         BufferedReader bufferedReader = new BufferedReader(
                 new InputStreamReader(bufferedInputStream, StandardCharsets.UTF_8));
@@ -354,6 +336,7 @@ public class AllCmd {
                 int index1 = cmd.lastIndexOf(" ");
                 form = cmd.substring(index1 + 1);
                 form = form.trim();
+                User user = null;
                 AllCmd.remove_any_by_form_of_education(StudyGroupPriorityQueue, form);
             }
 
@@ -416,13 +399,13 @@ public class AllCmd {
         }
 
     }
+*/
 
-
-    public static void head(Queue<StudyGroup> StudyGroupPriorityQueue) throws SocketException {
+    public static void head(Queue<StudyGroup> StudyGroupPriorityQueue) {
         try {
-            StudyGroup studyGroup = StudyGroupPriorityQueue.peek();
-            answer = "Имя: " + studyGroup.getName() + " Номер:" + studyGroup.getStudentsCount() + " " + studyGroup.getexp() + " Форма обучения: " + studyGroup.getFormOfEducation() + " Id: " + studyGroup.getId()
-                    + " Рост админа: " + studyGroup.getHeight() + " Вес админа: " + studyGroup.getWeight() + " Цвет глаз админа: " + studyGroup.getColor() + " Координата X: " + studyGroup.getCoordinatesX() + " Координата Y: " + studyGroup.getCoordinatesY();
+            StudyGroupPriorityQueue.stream().limit(1).forEach(studyGroup ->
+                    answer = "Имя: " + studyGroup.getName() + " Номер:" + studyGroup.getStudentsCount() + " " + studyGroup.getexp() + " Форма обучения: " + studyGroup.getFormOfEducation() + " Id: " + studyGroup.getId()
+                            + " Рост админа: " + studyGroup.getHeight() + " Вес админа: " + studyGroup.getWeight() + " Цвет глаз админа: " + studyGroup.getColor() + " Координата X: " + studyGroup.getCoordinatesX() + " Координата Y: " + studyGroup.getCoordinatesY());
             answerr.setAnswer(answer);
         } catch (NullPointerException e) {
             answer = "Нет здесь никакого первого элемента";
@@ -431,92 +414,71 @@ public class AllCmd {
     }
 
     public static void remove_head(Queue<StudyGroup> StudyGroupPriorityQueue) {
-        StudyGroup studyGroup = StudyGroupPriorityQueue.poll();
+
         answer = "Элемент удален";
         answerr.setAnswer(answer);
+        MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().skip(1).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
     }
 
-    public static void remove_lover(Queue<StudyGroup> student, long count) {
-        Iterator<StudyGroup> iterator = student.iterator();
-        while (iterator.hasNext()) {
-            if (count < iterator.next().getStudentsCount()) {
-                iterator.remove();
-            }
-        }
+    public static void remove_lover(Queue<StudyGroup> StudyGroupPriorityQueue, long count) {
+        MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().filter(student -> student.getStudentsCount() <= count).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
         answer = "Элементы удалены";
         answerr.setAnswer(answer);
     }
 
 
     public static void remove_any_by_form_of_education(Queue<StudyGroup> StudyGroupPriorityQueue, String form) {
-
-        Iterator<StudyGroup> iterator = StudyGroupPriorityQueue.iterator();
         form = form.trim();
-        while (iterator.hasNext()) {
-
-
-            if (form.equalsIgnoreCase("time")) {
-                if (iterator.next().getFormOfEducation().equals(Enum.FormOfEducation.FULL_TIME_EDUCATION)) {
-                    iterator.remove();
-                    break;
-                }
-            }
-            if (form.equalsIgnoreCase("distance")) {
-                if (iterator.next().getFormOfEducation().equals(Enum.FormOfEducation.DISTANCE_EDUCATION)) {
-                    iterator.remove();
-                    break;
-                }
-            }
-            if (form.equalsIgnoreCase("evening")) {
-                if (iterator.next().getFormOfEducation().equals(Enum.FormOfEducation.EVENING_CLASSES)) {
-                    iterator.remove();
-                    break;
-                }
-            }
-
+        if (form.equalsIgnoreCase("time")) {
+            StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().filter(student -> !student.getFormOfEducation().equals(Enum.FormOfEducation.FULL_TIME_EDUCATION)).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
         }
+        if (form.equalsIgnoreCase("distance")) {
+            StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().filter(student -> !student.getFormOfEducation().equals(Enum.FormOfEducation.DISTANCE_EDUCATION)).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
+        }
+        if (form.equalsIgnoreCase("evening")) {
+            StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().filter(student -> !student.getFormOfEducation().equals(Enum.FormOfEducation.EVENING_CLASSES)).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
+        }
+        MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue;
         answer = "Элементы удалены";
         answerr.setAnswer(answer);
     }
 
-    public static void filter_starts_with_name(Queue<StudyGroup> StudyGroupPriorityQueue, String name) throws SocketException {
-        for (StudyGroup student : StudyGroupPriorityQueue) {
-            if (student.getName().indexOf(name) == 0) {
-                answer = "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
-                        + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY();
-                answerr.setAnswer(answer);
-            }
-        }
-
-    }
-
-    public static void filter_greater_than_students_count(Queue<StudyGroup> StudyGroupPriorityQueue, long count) throws SocketException {
+    public static void filter_starts_with_name(Queue<StudyGroup> StudyGroupPriorityQueue, String name) {
         answer = "";
-        for (StudyGroup student : StudyGroupPriorityQueue) {
-            if (student.getStudentsCount() > count) {
-                String answer1 = "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
-                        + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY() + "\n";
-                answer = answer + answer1;
-            }
-        }
+        StudyGroupPriorityQueue.stream().filter(student -> student.getName().trim().startsWith(name)).forEach(student -> answer =
+                "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
+                        + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY() + "\n"
+        );
         answerr.setAnswer(answer);
+        MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue;
     }
+
+
+    public static void filter_greater_than_students_count(Queue<StudyGroup> StudyGroupPriorityQueue, long count) {
+        answer = "";
+
+        StudyGroupPriorityQueue.stream().filter(student -> student.getStudentsCount() > count).forEach(student -> answer =
+                answer + "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId()
+                        + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY() + "\n");
+        answerr.setAnswer(answer);
+        MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue;
+    }
+
 
     public static void file() {
-        if (XMLReader.flag==1){
-            String answer="Файл не может быть обработан, программа заканчивает работу";
+        if (XMLReader.flag == 1) {
+            answer = "Файл не может быть обработан, программа заканчивает работу";
             answerr.setAnswer(answer);
-            answerr.wrong=1;
-        }
-        else {
-            answerr.wrong=0;
+            answerr.wrong = 1;
+        } else {
+            answerr.wrong = 0;
             answer = "Файл передан";
             answerr.setAnswer(answer);
         }
     }
 
-    public static void exit(){
-        answerr.wrong=2;
+    public static void exit() {
+        answerr.wrong = 2;
     }
 
 }

@@ -7,7 +7,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
-import java.net.SocketAddress;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -23,7 +22,7 @@ public class XMLReader {
     static User user;
     static int flag = 0;
 
-    public static void main(ByteArrayInputStream fileInputStream, SocketAddress number) throws Exception {
+    public static void main(ByteArrayInputStream fileInputStream) throws Exception {
         // Получение фабрики, чтобы после получить билдер документов.
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -46,10 +45,8 @@ public class XMLReader {
             // Перебор всех элементов Student
             for (int i = 0; i < studentElements.getLength(); i++) {
                 Node student = studentElements.item(i);
-
                 // Получение атрибутов каждого элемента
                 NamedNodeMap attributes = student.getAttributes();
-
 
                 // Добавление студента. Атрибут - Node, потому нам нужно получить значение атрибута с помощью метода getNodeValue()
                 StudyGroupPriorityQueue.add(new StudyGroup(StudyGroupPriorityQueue, attributes.getNamedItem("name").getNodeValue(), attributes.getNamedItem("count").getNodeValue(), attributes.getNamedItem("exp").getNodeValue(),
@@ -64,15 +61,7 @@ public class XMLReader {
             Logger.login(Level.WARNING, "Файл невозможно обработать");
         }
         //заполняем данные пользователя
-        int i = 0;
-        while (i < MessageHandling.UserList.size()) {
-            User user = MessageHandling.UserList.get(i);
-            if (user.number.equals(number)) {
-                user.StudyGroup = StudyGroupPriorityQueue;
-                MessageHandling.UserList.set(i, user);
-            }
-            i++;
-        }
+        MessageHandling.StudyGroupPriorityQueue=StudyGroupPriorityQueue;
     }
 
 

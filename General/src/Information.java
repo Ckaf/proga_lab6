@@ -1,9 +1,10 @@
 import java.io.Serializable;
-
+/**
+ * Class that stores information received from the client
+ */
 class Information implements Serializable {
+    //transient
     String cmdtype;
-    int number;
-    int port;
     int SIZE=16384;
     byte[] file=new byte[SIZE];
     String name;

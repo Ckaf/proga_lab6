@@ -1,6 +1,7 @@
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
@@ -10,46 +11,52 @@ import java.util.Scanner;
 public class MainC {
     public static String FILENAME;
     public static int port = 8000;
-    public static String host="localhost";
+    public static String host = "localhost";
+
     public static void main() throws Exception {
         Client client = new Client();
         client.connect(host, port);
-        System.out.println("Введите имя файла");
         Scanner scanner = new Scanner(System.in);
-        FILENAME = scanner.nextLine();
         FileInputStream fileInputStream = null;
-        while (true) {
-            try {
-
-                if (Files.exists(Paths.get(FILENAME)) && Files.isReadable(Paths.get(FILENAME)) && Files.isWritable(Paths.get(FILENAME))) {
-                    fileInputStream = new FileInputStream(FILENAME);
-                    Information file = new Information();
-                    file.file = Files.readAllBytes(Paths.get(FILENAME));
-                    file.cmdtype = "file";
-                    client.run(file);
-                    break;
-                } else {
-                    if (Files.exists(Paths.get(FILENAME)) && (Files.isReadable(Paths.get(FILENAME)) == false | Files.isWritable(Paths.get(FILENAME)) == false)) {
-                        System.out.println("Кажется у нас ошибка доступа, попробуем еще раз");
-                        FILENAME = scanner.nextLine();
-                        if (FILENAME.equalsIgnoreCase("exit")) System.exit(0);
-                    } else {
-                        System.out.println("Файл не найден, введите имя заново");
+        if (Client.flag==1) {
+            System.out.println("Введите имя файла");
+            FILENAME = scanner.nextLine();
+            while (true) {
+                try {
+                    try {
+                        if (Files.exists(Paths.get(FILENAME)) && Files.isReadable(Paths.get(FILENAME)) && Files.isWritable(Paths.get(FILENAME))) {
+                            fileInputStream = new FileInputStream(FILENAME);
+                            Information file = new Information();
+                            file.file = Files.readAllBytes(Paths.get(FILENAME));
+                            file.cmdtype = "file";
+                            client.run(file);
+                            break;
+                        } else {
+                            if (Files.exists(Paths.get(FILENAME)) && (Files.isReadable(Paths.get(FILENAME)) == false | Files.isWritable(Paths.get(FILENAME)) == false)) {
+                                System.out.println("Кажется у нас ошибка доступа, попробуем еще раз");
+                                FILENAME = scanner.nextLine();
+                                if (FILENAME.equalsIgnoreCase("exit")) System.exit(0);
+                            } else {
+                                System.out.println("Файл не найден, введите имя заново");
+                                FILENAME = scanner.nextLine();
+                                if (FILENAME.equalsIgnoreCase("exit")) System.exit(0);
+                            }
+                        }
+                    } catch (FileNotFoundException e) {
+                        System.out.println("Кажется путь указыает на директрию, попробуем еще раз");
                         FILENAME = scanner.nextLine();
                         if (FILENAME.equalsIgnoreCase("exit")) System.exit(0);
                     }
+                } catch (InvalidPathException e) {
+                    System.out.println("Указан неверный путь");
+                    FILENAME = scanner.nextLine();
                 }
-            } catch (FileNotFoundException e) {
-                System.out.println("Кажется путь указыает на директрию, попробуем еще раз");
-                FILENAME = scanner.nextLine();
-                if (FILENAME.equalsIgnoreCase("exit")) System.exit(0);
             }
+            Client.flag=0;
         }
-
 
         Scanner scanner1 = new Scanner(System.in);
         String cmd = "";
-        int flag = 0;
         while (cmd.equalsIgnoreCase("exit") != true) {
             cmd = scanner1.nextLine();
             cmd = cmd.trim();
@@ -421,7 +428,7 @@ public class MainC {
                                                         int index1 = cmd.lastIndexOf(" ");
                                                         form = cmd.substring(index1 + 1);
                                                         while (true) {
-                                                            if (form.equalsIgnoreCase("time") == false && form.equalsIgnoreCase("distance") == false && form.equalsIgnoreCase("evening") == false) {
+                                                            if (form.lastIndexOf("time") == -1 && form.equalsIgnoreCase("distance") == false && form.equalsIgnoreCase("evening") == false) {
                                                                 System.out.println("Введите форму обучения(full time,distance,evening)");
                                                                 scanner = new Scanner(System.in);
                                                                 form = scanner.nextLine();
