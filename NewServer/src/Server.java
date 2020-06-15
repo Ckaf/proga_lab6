@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.net.*;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
 /**
@@ -29,27 +31,42 @@ public class Server {
     }
 
     public static void run() throws Exception {
-        while (true) {
-            datagramPacket = new DatagramPacket(buffer, buffer.length);
-            try {
-                datagramSocket.receive(datagramPacket);
-            } catch (SocketTimeoutException socketTimeoutException) {
-                socketTimeoutException.printStackTrace();
+        ExecutorService service= Executors.newFixedThreadPool(2);
+        Runnable task=()-> {
+            while (true) {
+                datagramPacket = new DatagramPacket(buffer, buffer.length);
+                try {
+                    datagramSocket.receive(datagramPacket);
+                } catch (SocketTimeoutException socketTimeoutException) {
+                    socketTimeoutException.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    MessageHandling.AcceptedFile(buffer);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    MessageHandling.Handling(buffer);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                readServerCmd();
+                try {
+                    byte[] commandInBytes = serializationManagerAnswer.writeObject(AllCmd.answerr);
+                    DatagramPacket datagramPacket1 = new DatagramPacket(commandInBytes, commandInBytes.length, datagramPacket.getSocketAddress());
+                    datagramSocket.send(datagramPacket1);
+                    AllCmd.answer = "";
+                    AllCmd.answerr.wrong = 0;
+                    AllCmd.answerr.answer1 = null;
+                } catch (IOException | ClassCastException e) {
+                    e.printStackTrace();
+                }
             }
-            MessageHandling.AcceptedFile(buffer);
-            MessageHandling.Handling(buffer);
-            readServerCmd();
-            try {
-                byte[] commandInBytes = serializationManagerAnswer.writeObject(AllCmd.answerr);
-                DatagramPacket datagramPacket1 = new DatagramPacket(commandInBytes, commandInBytes.length, datagramPacket.getSocketAddress());
-                datagramSocket.send(datagramPacket1);
-                AllCmd.answer="";
-                AllCmd.answerr.wrong = 0;
-                AllCmd.answerr.answer1 = null;
-            } catch (IOException | ClassCastException e) {
-                e.printStackTrace();
-            }
-        }
+        };
+        service.submit(task);
+        service.shutdown();
     }
 
     private static void readServerCmd() throws NullPointerException{

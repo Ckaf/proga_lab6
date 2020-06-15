@@ -1,8 +1,7 @@
 import java.io.IOException;
-import java.net.SocketException;
-import java.util.PriorityQueue;
+import java.sql.SQLException;
 import java.util.Queue;
-import java.util.stream.Collectors;
+import java.util.logging.Level;
 
 
 /**
@@ -12,7 +11,7 @@ public class AllCmd {
     static String answer;
     static Answer answerr = new Answer();
 
-    public static void help() throws SocketException {
+    public static void help() {
         answer = "info : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)\n" +
                 "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении\n" +
                 "add {element} : добавить новый элемент в коллекцию\n" +
@@ -30,60 +29,60 @@ public class AllCmd {
         answerr.setAnswer(answer);
     }
 
-    public static void info(Queue<StudyGroup> StudyGroupPriorityQueue) {
+    public static void info(Queue<StudyGroup> StudyGroupPriorityQueue) throws NullPointerException {
         answer = "тип коллекции:PriorityQueue " + "кол-во элементов: " + StudyGroupPriorityQueue.size() + " дата инициализации: " + StudyGroupPriorityQueue.peek().getCreationDate();
         answerr.setAnswer(answer);
     }
 
     public static void show(Queue<StudyGroup> StudyGroupPriorityQueue) {
         answer = "";
-        StudyGroupPriorityQueue.stream().forEach(student ->
+        MessageHandling.StudyGroupPriorityQueue.stream().sorted(XMLReader.countComparator).forEach(student ->
                 answer = answer + "Имя: " + student.getName() + " Номер:" + student.getStudentsCount() + " " + student.getexp() + " Форма обучения: " + student.getFormOfEducation() + " Id: " + student.getId() + " Имя админа: " + student.getAdminName()
                         + " Рост админа: " + student.getHeight() + " Вес админа: " + student.getWeight() + " Цвет глаз админа: " + student.getColor() + " Координата X: " + student.getCoordinatesX() + " Координата Y: " + student.getCoordinatesY() + "\n");
         answerr.setAnswer(answer);
     }
 
-    public static void add(String name, String count, String exp, String form, String semestr, String groupAdmin, String height, String weight, String eyeColor, String X, String Y, Queue<StudyGroup> StudyGroupPriorityQueue) throws Exception {
-        StudyGroupPriorityQueue.add(new StudyGroup(StudyGroupPriorityQueue, name, count, exp, form, semestr, groupAdmin, height, weight, eyeColor, X, Y));
+    public static void add(String name, String count, String exp, String form, String semestr, String groupAdmin, String height, String weight, String eyeColor, String X, String Y, Queue<StudyGroup> StudyGroupPriorityQueue, Information information) throws Exception {
+        Command.add(name, count, exp, form, semestr, groupAdmin, height, weight, eyeColor, X, Y, information);
+        //StudyGroupPriorityQueue.add(new StudyGroup(StudyGroupPriorityQueue, name, count, exp, form, semestr, groupAdmin, height, weight, eyeColor, X, Y));
         answer = "Элемент добавлен";
         answerr.setAnswer(answer);
-        MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue;
+        //  MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue;
     }
 
-    public static void update(Queue<StudyGroup> StudyGroupPriorityQueue, String idstr, String name, String count, String exp, String form, String semestr, String groupAdmin, String height, String weight, String eyeColor, String X, String Y) {
-        Integer id = Integer.parseInt(idstr);
-        Queue<StudyGroup> s = StudyGroupPriorityQueue.stream().filter(student -> student.getId().equals(id))
-                .peek(student -> student.setName(name))
-                .peek(student -> student.setStudentsCount(Long.parseLong(count)))
-                .peek(student -> student.setExp(exp))
-                .peek(student -> student.setFormOfEducation(form))
-                .peek(student -> student.setSemesterEnum(semestr))
-                .peek(student -> student.getGroupAdmin().setAdminName(groupAdmin))
-                .peek(student -> student.getGroupAdmin().setHeight(height))
-                .peek(student -> student.getGroupAdmin().setWeight(weight))
-                .peek(student -> student.getGroupAdmin().setEyeColor(eyeColor))
-                .peek(student -> student.getCoordinates().setX(X))
-                .peek(student -> student.getCoordinates().setY(Y)).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
-        StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().filter(student -> student.getId().equals(id) == false).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
-        Queue<StudyGroup> finalStudyGroupPriorityQueue = StudyGroupPriorityQueue;
-        s.stream().collect(Collectors.toCollection(() -> finalStudyGroupPriorityQueue));
-        MessageHandling.StudyGroupPriorityQueue = finalStudyGroupPriorityQueue;
-        answer = "Данные обновлены";
+    public static void update(Information information) throws SQLException {
+        if (Command.checkLogin(information)) {
+            try {
+                Command.update(information.name, information.count, information.exp, information.form, information.semestr, information.groupAdmin, information.height, information.weight, information.eyeColor, information.X, information.Y, information.idstr);
+                Command.readdb();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            answer = "Данные обновлены";
+        } else {
+            answer = "Этот элемент не пренадлежит вам, вы не можете его изменять";
+            Logger.login(Level.INFO, "Попытка изменения элемента не удалась");
+        }
         answerr.setAnswer(answer);
     }
 
 
-    public static void remove_by_id(Queue<StudyGroup> StudyGroupPriorityQueue, String idstr) {
-        Integer id = Integer.valueOf(idstr.trim());
-        answer = "Элемент удален";
+    public static void remove_by_id(Information information) throws Exception {
+        if(Command.checkLogin(information)) {
+            Command.remove_by_id(information);
+            Command.readdb();
+            answer = "Элемент удален";
+        }
+        else answer="Вы не можете удалить этот элемент";
         answerr.setAnswer(answer);
-        MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().filter(student -> student.getId().equals(id) == false).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
     }
 
-    public static void clear(Queue<StudyGroup> StudyGroupPriorityQueue) {
-
-        MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().skip(StudyGroupPriorityQueue.size()).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
-        answer = "Коллекция очещена";
+    public static void clear(Information information) throws Exception {
+        Command.clear(information);
+        Command.readdb();
+        answer = "Ваши элементы удалены";
         answerr.setAnswer(answer);
     }
 
@@ -413,33 +412,26 @@ public class AllCmd {
         }
     }
 
-    public static void remove_head(Queue<StudyGroup> StudyGroupPriorityQueue) {
-
-        answer = "Элемент удален";
+    public static void remove_head(Information information) throws Exception {
+        Command.remove_head(information);
+        Command.readdb();
         answerr.setAnswer(answer);
-        MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().skip(1).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
+
+       // MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().skip(1).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
     }
 
-    public static void remove_lover(Queue<StudyGroup> StudyGroupPriorityQueue, long count) {
-        MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().filter(student -> student.getStudentsCount() <= count).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
-        answer = "Элементы удалены";
+    public static void remove_lover(Information information) throws Exception {
+        Command.remove_lower(information);
+        Command.readdb();
+        answer = "Элементы, принадлежащие вам, удалены";
         answerr.setAnswer(answer);
     }
 
 
-    public static void remove_any_by_form_of_education(Queue<StudyGroup> StudyGroupPriorityQueue, String form) {
-        form = form.trim();
-        if (form.equalsIgnoreCase("time")) {
-            StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().filter(student -> !student.getFormOfEducation().equals(Enum.FormOfEducation.FULL_TIME_EDUCATION)).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
-        }
-        if (form.equalsIgnoreCase("distance")) {
-            StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().filter(student -> !student.getFormOfEducation().equals(Enum.FormOfEducation.DISTANCE_EDUCATION)).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
-        }
-        if (form.equalsIgnoreCase("evening")) {
-            StudyGroupPriorityQueue = StudyGroupPriorityQueue.stream().filter(student -> !student.getFormOfEducation().equals(Enum.FormOfEducation.EVENING_CLASSES)).collect(Collectors.toCollection(() -> new PriorityQueue<>(XMLReader.countComparator)));
-        }
-        MessageHandling.StudyGroupPriorityQueue = StudyGroupPriorityQueue;
-        answer = "Элементы удалены";
+    public static void remove_any_by_form_of_education(Information information) throws Exception {
+        Command.remove_any_by_form_of_education(information);
+        Command.readdb();
+        answer = "Элементы, принадлежащие вам, удалены";
         answerr.setAnswer(answer);
     }
 

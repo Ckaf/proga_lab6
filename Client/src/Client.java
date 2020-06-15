@@ -25,9 +25,6 @@ public class Client {
             channel = DatagramChannel.open();
             channel.configureBlocking(false);
             channel.connect(address);
-            Information information = new Information();
-            information.cmdtype = "connect";
-            run(information);
         } catch (IOException e) {
             System.out.println("Ошибка подключения");
         }
@@ -61,6 +58,13 @@ public class Client {
             } while (address == null);
             Answer result = new Answer();
             result = responseSerializationManager.readObject(answerInBytes);
+            try {
+                if (result.autorizatonflag.equals("fail")){
+                    System.out.println(result.getAnswer());
+                    System.exit(0);
+                }
+            }
+            catch (NullPointerException e){}
             if (result.wrong == -1) flag = 1;
             else {
                 if (result.wrong != 2) {

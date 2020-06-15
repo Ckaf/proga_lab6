@@ -1,5 +1,4 @@
 import java.time.ZonedDateTime;
-import java.util.Iterator;
 import java.util.Queue;
 
 /**
@@ -16,12 +15,11 @@ public class StudyGroup {
     private Enum.FormOfEducation formOfEducation;//Поле не может быть null
     private Enum.Semester semesterEnum;//Поле не может быть null
     private Person groupAdmin;//Поле не может быть null
-
     private String exp;
     public StudyGroup(Queue<StudyGroup> StudyGroupPriorityQueue, String name, String count, String exp, String form, String semestr, String groupAdmin, String height, String weight, String eyeColor, String X, String Y) throws Exception {
         //creationDate=creationDate.minusDays(0);
         creationDate=ZonedDateTime.now();
-        Iterator<StudyGroup> it = StudyGroupPriorityQueue.iterator();
+//        Iterator<StudyGroup> it = StudyGroupPriorityQueue.iterator();
         this.name = name.trim();
         if (this.name == null | this.name.equalsIgnoreCase("") ) {
             System.out.println("Ошибка в заполнении данных, программа прерывает работу");
@@ -39,8 +37,6 @@ public class StudyGroup {
             System.out.println("Ошибка в заполнении данных, программа прерывает работу");
             System.exit(0);
         }
-        Integer id = (int) (Math.random() * 1000000);
-        setId(id);
         if (exp.equals("yes") == true) {
             this.exp = "отчислен";
             expelledStudents=1L;

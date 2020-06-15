@@ -4,6 +4,10 @@ import java.io.Serializable;
  */
 class Information implements Serializable {
     //transient
+    private static final long serialVersionUID=34567890L;
+    String regtype;
+    String login;
+    String pass;
     String cmdtype;
     int SIZE=16384;
     byte[] file=new byte[SIZE];

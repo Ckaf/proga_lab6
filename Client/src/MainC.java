@@ -1,7 +1,6 @@
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
@@ -12,49 +11,29 @@ public class MainC {
     public static String FILENAME;
     public static int port = 8000;
     public static String host = "localhost";
-
+    private static FileInputStream fileInputStream;
     public static void main() throws Exception {
         Client client = new Client();
         client.connect(host, port);
         Scanner scanner = new Scanner(System.in);
-        FileInputStream fileInputStream = null;
-        if (Client.flag==1) {
-            System.out.println("Введите имя файла");
-            FILENAME = scanner.nextLine();
-            while (true) {
-                try {
-                    try {
-                        if (Files.exists(Paths.get(FILENAME)) && Files.isReadable(Paths.get(FILENAME)) && Files.isWritable(Paths.get(FILENAME))) {
-                            fileInputStream = new FileInputStream(FILENAME);
-                            Information file = new Information();
-                            file.file = Files.readAllBytes(Paths.get(FILENAME));
-                            file.cmdtype = "file";
-                            client.run(file);
-                            break;
-                        } else {
-                            if (Files.exists(Paths.get(FILENAME)) && (Files.isReadable(Paths.get(FILENAME)) == false | Files.isWritable(Paths.get(FILENAME)) == false)) {
-                                System.out.println("Кажется у нас ошибка доступа, попробуем еще раз");
-                                FILENAME = scanner.nextLine();
-                                if (FILENAME.equalsIgnoreCase("exit")) System.exit(0);
-                            } else {
-                                System.out.println("Файл не найден, введите имя заново");
-                                FILENAME = scanner.nextLine();
-                                if (FILENAME.equalsIgnoreCase("exit")) System.exit(0);
-                            }
-                        }
-                    } catch (FileNotFoundException e) {
-                        System.out.println("Кажется путь указыает на директрию, попробуем еще раз");
-                        FILENAME = scanner.nextLine();
-                        if (FILENAME.equalsIgnoreCase("exit")) System.exit(0);
-                    }
-                } catch (InvalidPathException e) {
-                    System.out.println("Указан неверный путь");
-                    FILENAME = scanner.nextLine();
-                }
-            }
-            Client.flag=0;
+        Information infconnect=new Information();
+        System.out.println("Вы хотите авторизоваться или войти?(reg\\aut)");
+        String regtype=scanner.nextLine();
+        if (regtype.equalsIgnoreCase("reg"))infconnect.regtype="reg";
+        else if(regtype.equalsIgnoreCase("aut"))infconnect.regtype="aut";
+        else {
+            System.out.println("Тип авторизации введен неверно, программа завершает работу");
+            System.exit(0);
         }
+        System.out.println("Введите логин");
+        String login=scanner.nextLine();
+        System.out.println("Введите пароль");
+        String pass=scanner.nextLine();
 
+        infconnect.cmdtype="connect";
+        infconnect.login=login;
+        infconnect.pass=pass;
+        client.run(infconnect);
         Scanner scanner1 = new Scanner(System.in);
         String cmd = "";
         while (cmd.equalsIgnoreCase("exit") != true) {
@@ -63,11 +42,15 @@ public class MainC {
             if (cmd.equalsIgnoreCase("help") == true) {
                 Information help = new Information();
                 help.cmdtype = "help";
+                help.login=login;
+                help.pass=pass;
                 client.run(help);
             } else {
                 if (cmd.equalsIgnoreCase("info") == true) {
                     Information info = new Information();
                     info.cmdtype = "info";
+                    info.login=login;
+                    info.pass=pass;
                     client.run(info);
                 } else {
                     if (cmd.lastIndexOf("add") != -1) {
@@ -196,6 +179,8 @@ public class MainC {
                                 add.cmdtype = "add";
                                 //   add.arrayList.addAll(Arrays.asList(substr));
                                 add.setParametrs(substr[0], substr[1], substr[2], substr[3], substr[4], substr[5], substr[6], substr[7], substr[8], substr[9], substr[10]);
+                                add.login=login;
+                                add.pass=pass;
                                 client.run(add);
                                 break;
                             } catch (NumberFormatException e) {
@@ -209,6 +194,8 @@ public class MainC {
                         if (cmd.equalsIgnoreCase("show") == true) {
                             Information show = new Information();
                             show.cmdtype = "show";
+                            show.login=login;
+                            show.pass=pass;
                             client.run(show);
                         } else {
                             if (cmd.lastIndexOf("remove_by_id") != -1) {
@@ -223,6 +210,8 @@ public class MainC {
                                         remove_by_id.cmdtype = "remove_by_id";
                                         // remove_by_id.arrayList.add(id);
                                         remove_by_id.idstr = id;
+                                        remove_by_id.login=login;
+                                        remove_by_id.pass=pass;
                                         client.run(remove_by_id);
                                         break;
                                     } catch (NumberFormatException e) {
@@ -234,16 +223,22 @@ public class MainC {
                                 if (cmd.equalsIgnoreCase("clear") == true) {
                                     Information clear = new Information();
                                     clear.cmdtype = "clear";
+                                    clear.login=login;
+                                    clear.pass=pass;
                                     client.run(clear);
                                 } else {
                                     if (cmd.equalsIgnoreCase("head") == true) {
                                         Information head = new Information();
                                         head.cmdtype = "head";
+                                        head.login=login;
+                                        head.pass=pass;
                                         client.run(head);
                                     } else {
                                         if (cmd.equalsIgnoreCase("remove_head") == true) {
                                             Information remove_head = new Information();
                                             remove_head.cmdtype = "remove_head";
+                                            remove_head.login=login;
+                                            remove_head.pass=pass;
                                             client.run(remove_head);
                                         } else {
                                             if (cmd.lastIndexOf("update") != -1) {
@@ -403,6 +398,8 @@ public class MainC {
                                                 update.cmdtype = "update";
                                                 update.idstr = id;
                                                 update.setParametrs(substr[0], substr[1], substr[2], substr[3], substr[4], substr[5], substr[6], substr[7], substr[8], substr[9], substr[10]);
+                                                update.login=login;
+                                                update.pass=pass;
                                                 client.run(update);
                                             } else {
                                                 if (cmd.lastIndexOf("remove_lower") != -1) {
@@ -421,6 +418,8 @@ public class MainC {
                                                     remove_lover.cmdtype = "remove_lover";
                                                     // remove_lover.arrayList.add(count);
                                                     remove_lover.count = String.valueOf(count);
+                                                    remove_lover.login=login;
+                                                    remove_lover.pass=pass;
                                                     client.run(remove_lover);
                                                 } else {
                                                     if (cmd.lastIndexOf("remove_any_by_form_of_education") != -1) {
@@ -439,6 +438,8 @@ public class MainC {
                                                         remove_any_by_form_of_education.cmdtype = "remove_any_by_form_of_education";
                                                         // remove_any_by_form_of_education.arrayList.add(form);
                                                         remove_any_by_form_of_education.form = form;
+                                                        remove_any_by_form_of_education.login=login;
+                                                        remove_any_by_form_of_education.pass=pass;
                                                         client.run(remove_any_by_form_of_education);
                                                     } else {
                                                         if (cmd.lastIndexOf("filter_starts_with_name") != -1) {
@@ -448,6 +449,8 @@ public class MainC {
                                                             Information filter_starts_with_name = new Information();
                                                             filter_starts_with_name.cmdtype = "filter_starts_with_name";
                                                             filter_starts_with_name.name = name;
+                                                            filter_starts_with_name.login=login;
+                                                            filter_starts_with_name.pass=pass;
                                                             client.run(filter_starts_with_name);
                                                         } else {
                                                             if (cmd.lastIndexOf("filter_greater_than_students_count") != -1) {
@@ -460,6 +463,8 @@ public class MainC {
                                                                         Information filter_greater_than_students_count = new Information();
                                                                         filter_greater_than_students_count.cmdtype = "filter_greater_than_students_count";
                                                                         filter_greater_than_students_count.count = String.valueOf(cou);
+                                                                        filter_greater_than_students_count.login=login;
+                                                                        filter_greater_than_students_count.pass=pass;
                                                                         client.run(filter_greater_than_students_count);
                                                                         break;
                                                                     } catch (NumberFormatException e) {
@@ -514,12 +519,16 @@ public class MainC {
                                                                         if (cmd.equalsIgnoreCase("help") == true) {
                                                                             Information execute = new Information();
                                                                             execute.cmdtype = "help";
+                                                                            execute.login=login;
+                                                                            execute.pass=pass;
                                                                             Client.run(execute);
                                                                         }
 
                                                                         if (cmd.equalsIgnoreCase("info") == true) {
                                                                             Information execute = new Information();
                                                                             execute.cmdtype = "info";
+                                                                            execute.login=login;
+                                                                            execute.pass=pass;
                                                                             Client.run(execute);
                                                                         }
                                                                         if (cmd.lastIndexOf("add") != -1) {
@@ -668,6 +677,8 @@ public class MainC {
                                                                                 Information execute = new Information();
                                                                                 execute.cmdtype = "add";
                                                                                 execute.setParametrs(substr[0], substr[1], substr[2], substr[3], substr[4], substr[5], substr[6], substr[7], substr[8], substr[9], substr[10]);
+                                                                                execute.login=login;
+                                                                                execute.pass=pass;
                                                                                 Client.run(execute);
                                                                             } catch (Exception e) {
                                                                                 e.printStackTrace();
@@ -677,6 +688,8 @@ public class MainC {
                                                                         if (cmd.equalsIgnoreCase("show") == true) {
                                                                             Information execute = new Information();
                                                                             execute.cmdtype = "show";
+                                                                            execute.login=login;
+                                                                            execute.pass=pass;
                                                                             Client.run(execute);
                                                                         }
 
@@ -687,12 +700,16 @@ public class MainC {
                                                                             Information execute = new Information();
                                                                             execute.cmdtype = "remove_by_id";
                                                                             execute.idstr = id;
+                                                                            execute.login=login;
+                                                                            execute.pass=pass;
                                                                             Client.run(execute);
                                                                         }
 
                                                                         if (cmd.equalsIgnoreCase("clear") == true) {
                                                                             Information execute = new Information();
                                                                             execute.cmdtype = "clear";
+                                                                            execute.login=login;
+                                                                            execute.pass=pass;
                                                                             Client.run(execute);
                                                                         }
 
@@ -703,11 +720,15 @@ public class MainC {
                                                                         if (cmd.equalsIgnoreCase("head") == true) {
                                                                             Information execute = new Information();
                                                                             execute.cmdtype = "head";
+                                                                            execute.login=login;
+                                                                            execute.pass=pass;
                                                                             Client.run(execute);
                                                                         }
                                                                         if (cmd.equalsIgnoreCase("remove_head") == true) {
                                                                             Information execute = new Information();
                                                                             execute.cmdtype = "remove_head";
+                                                                            execute.login=login;
+                                                                            execute.pass=pass;
                                                                             Client.run(execute);
                                                                         }
 
@@ -739,6 +760,8 @@ public class MainC {
                                                                                 execute.cmdtype = "update";
                                                                                 execute.setParametrs(substr[0], substr[1], substr[3], substr[4], substr[5], substr[6], substr[7], substr[8], substr[9], substr[10], substr[11]);
                                                                                 execute.idstr = String.valueOf(id);
+                                                                                execute.login=login;
+                                                                                execute.pass=pass;
                                                                                 Client.run(execute);
                                                                             } catch (Exception e) {
                                                                                 System.out.println("Неправильный ввод данных");
@@ -760,6 +783,8 @@ public class MainC {
                                                                             Information execute = new Information();
                                                                             execute.cmdtype = "remove_lover";
                                                                             execute.count = String.valueOf(count);
+                                                                            execute.login=login;
+                                                                            execute.pass=pass;
                                                                             Client.run(execute);
                                                                         }
 
@@ -792,6 +817,8 @@ public class MainC {
                                                                             Information execute = new Information();
                                                                             execute.cmdtype = "remove_any_by_form_of_education";
                                                                             execute.form = form;
+                                                                            execute.login=login;
+                                                                            execute.pass=pass;
                                                                             Client.run(execute);
                                                                         }
 
@@ -803,6 +830,8 @@ public class MainC {
                                                                             Information execute = new Information();
                                                                             execute.cmdtype = "filter_starts_with_name";
                                                                             execute.name = name;
+                                                                            execute.login=login;
+                                                                            execute.pass=pass;
                                                                             Client.run(execute);
                                                                         }
 
@@ -826,6 +855,8 @@ public class MainC {
                                                                             Information execute = new Information();
                                                                             execute.cmdtype = "filter_greater_than_students_count";
                                                                             execute.count = String.valueOf(cou);
+                                                                            execute.login=login;
+                                                                            execute.pass=pass;
                                                                             Client.run(execute);
 
                                                                         }
@@ -885,10 +916,6 @@ public class MainC {
             }
         }
         if (cmd.equalsIgnoreCase("exit")) {
-            Information information = new Information();
-            information.cmdtype = "exit";
-            Client.run(information);
-            Thread.sleep(1000);
             System.exit(0);
         }
     }

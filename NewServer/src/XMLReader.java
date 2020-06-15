@@ -61,7 +61,7 @@ public class XMLReader {
             Logger.login(Level.WARNING, "Файл невозможно обработать");
         }
         //заполняем данные пользователя
-        MessageHandling.StudyGroupPriorityQueue=StudyGroupPriorityQueue;
+     //   MessageHandling.StudyGroupPriorityQueue=StudyGroupPriorityQueue;
     }
 
 
