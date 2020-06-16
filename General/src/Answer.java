@@ -15,4 +15,6 @@ class Answer implements Serializable {
     public void setAnswer(String answer){
         this.answer=answer;
 }
+    public void setAutorizatonflag(String autorizatonflag){this.autorizatonflag=autorizatonflag;}
+    public String getAutorizatonflag(){return autorizatonflag;}
 }

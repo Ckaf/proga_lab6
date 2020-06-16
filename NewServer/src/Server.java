@@ -30,8 +30,8 @@ public class Server {
         }
     }
 
-    public static void run() throws Exception {
-        ExecutorService service= Executors.newFixedThreadPool(2);
+    public synchronized static void run() throws Exception {
+        ExecutorService service= Executors.newFixedThreadPool(1);
         Runnable task=()-> {
             while (true) {
                 datagramPacket = new DatagramPacket(buffer, buffer.length);
@@ -42,27 +42,17 @@ public class Server {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                try {
-                    MessageHandling.AcceptedFile(buffer);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                try {
-                    MessageHandling.Handling(buffer);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                    try {
+                        MessageHandling.HandlingThread(buffer,datagramPacket.getSocketAddress());
+                       // System.out.println(3);
+                        //MessageHandling.Handling(buffer);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+               // service1.shutdown();
                 readServerCmd();
-                try {
-                    byte[] commandInBytes = serializationManagerAnswer.writeObject(AllCmd.answerr);
-                    DatagramPacket datagramPacket1 = new DatagramPacket(commandInBytes, commandInBytes.length, datagramPacket.getSocketAddress());
-                    datagramSocket.send(datagramPacket1);
-                    AllCmd.answer = "";
-                    AllCmd.answerr.wrong = 0;
-                    AllCmd.answerr.answer1 = null;
-                } catch (IOException | ClassCastException e) {
-                    e.printStackTrace();
-                }
+
             }
         };
         service.submit(task);
@@ -99,4 +89,39 @@ public class Server {
         }
     }
 
+    public synchronized static void sendler(Answer answer,SocketAddress socketAddress) {
+        Runnable task = () -> {
+        try {
+            byte[] commandInBytes = serializationManagerAnswer.writeObject(answer);
+            DatagramPacket datagramPacket1 = new DatagramPacket(commandInBytes, commandInBytes.length, socketAddress);
+            datagramSocket.send(datagramPacket1);
+            AllCmd.answer = "";
+            AllCmd.answerr.wrong = 0;
+            AllCmd.answerr.answer1 = null;
+        } catch (IOException | ClassCastException e) {
+            e.printStackTrace();
+        }
+        };
+        ExecutorService executorService=Executors.newCachedThreadPool();
+        executorService.submit(task);
+        executorService.shutdown();
+     //   executorService.shutdown();
+    }
+
+    public static void reciver() {
+        ExecutorService service = Executors.newFixedThreadPool(2);
+        Runnable task = () -> {
+            while (true) {
+                datagramPacket = new DatagramPacket(buffer, buffer.length);
+                try {
+                    datagramSocket.receive(datagramPacket);
+                } catch (SocketTimeoutException socketTimeoutException) {
+                    socketTimeoutException.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+    }
 }

@@ -13,7 +13,7 @@ public class Command {
     static ResultSet resultSet;
     static Queue<StudyGroup> StudyGroupPriorityQueue;
 
-    public static void readdb() throws Exception {
+    public synchronized static void readdb() throws Exception {
         statement = Connect.connection.createStatement();
         resultSet = statement.executeQuery("select count from mytabl");
         resultSet.next();
@@ -43,7 +43,7 @@ public class Command {
 
     }
 
-    public static String isExistingUser(String login, String password) throws SQLException, NoSuchAlgorithmException {
+    public synchronized static String isExistingUser(String login, String password) throws SQLException, NoSuchAlgorithmException {
         PreparedStatement preparedStatement = Connect.connection.prepareStatement("SELECT * FROM logpass WHERE login = ?");
         preparedStatement.setString(1, login);
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -64,7 +64,7 @@ public class Command {
         }
     }
 
-    public static void registrationUser(String login, String password) throws NoSuchAlgorithmException, SQLException {
+    public synchronized static void registrationUser(String login, String password) throws NoSuchAlgorithmException, SQLException {
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-384");
         byte[] bytes = messageDigest.digest(password.getBytes(StandardCharsets.UTF_8));
         PreparedStatement preparedStatement = Connect.connection.prepareStatement("INSERT INTO logpass VALUES ( ?, ?)");
@@ -75,7 +75,7 @@ public class Command {
         preparedStatement.close();
     }
 
-    public static void add(String name, String count, String exp, String form, String semester, String gA, String height, String weight, String eyeColor, String X, String Y, Information information) throws SQLException {
+    public synchronized static void add(String name, String count, String exp, String form, String semester, String gA, String height, String weight, String eyeColor, String X, String Y, Information information) throws SQLException {
         try {
             statement = Connect.connection.createStatement();
         } catch (SQLException e) {
@@ -108,14 +108,14 @@ public class Command {
         }
     }
 
-    public static Integer generate_id() throws SQLException {
+    public synchronized static Integer generate_id() throws SQLException {
         PreparedStatement statement = Connect.connection.prepareStatement("select nextval('generate_id') ");
         ResultSet resultSet = statement.executeQuery();
         resultSet.next();
         return resultSet.getInt("nextval");
     }
 
-    public static void update(String name, String count, String exp, String form, String semester, String gA, String height, String weight, String eyeColor, String X, String Y, String id) throws SQLException {
+    public synchronized static void update(String name, String count, String exp, String form, String semester, String gA, String height, String weight, String eyeColor, String X, String Y, String id) throws SQLException {
         PreparedStatement preparedStatement = Connect.connection.prepareStatement("UPDATE mytabl SET  name = ?, count = ?, exp = ?, " +
                 "form= ?, semester = ?, admin_name = ?," +
                 " height = ?, weight = ?, eye_color = ?, " +
@@ -138,7 +138,7 @@ public class Command {
         preparedStatement.close();
     }
 
-    public static boolean checkLogin(Information information) throws SQLException {
+    public synchronized static boolean checkLogin(Information information) throws SQLException {
         PreparedStatement preparedStatement = Connect.connection.prepareStatement("SELECT * FROM mytabl WHERE id = ?");
         preparedStatement.setInt(1, Integer.parseInt(information.idstr));
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -148,7 +148,7 @@ public class Command {
         else return false;
     }
 
-    public static boolean checkLogin(Information information, Integer id) throws SQLException {
+    public synchronized static boolean checkLogin(Information information, Integer id) throws SQLException {
         PreparedStatement preparedStatement = Connect.connection.prepareStatement("SELECT * FROM mytabl WHERE id = ?");
         preparedStatement.setInt(1, Integer.parseInt(String.valueOf(id)));
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -158,20 +158,20 @@ public class Command {
         else return false;
     }
 
-    public static void remove_any_by_form_of_education(Information information) throws SQLException {
+    public synchronized static void remove_any_by_form_of_education(Information information) throws SQLException {
         PreparedStatement preparedStatement = Connect.connection.prepareStatement("DELETE FROM mytabl WHERE  form=? AND login=?");
         preparedStatement.setString(1, information.form.trim());
         preparedStatement.setString(2, information.login);
         preparedStatement.executeUpdate();
     }
 
-    public static void remove_lower(Information information) throws SQLException {
+    public synchronized static void remove_lower(Information information) throws SQLException {
         PreparedStatement preparedStatement = Connect.connection.prepareStatement("DELETE FROM mytabl WHERE count<?  AND login=?");
         preparedStatement.setInt(1, Integer.parseInt(information.count));
         preparedStatement.setString(2, information.login);
     }
 
-    public static void remove_head(Information information) throws SQLException {
+    public synchronized static void remove_head(Information information) throws SQLException {
         PreparedStatement preparedStatement = Connect.connection.prepareStatement("SELECT * FROM mytabl MIN(count )");
         ResultSet resultSet = preparedStatement.executeQuery();
         resultSet.next();
@@ -184,12 +184,12 @@ public class Command {
         } else AllCmd.answer = "Этот элемент вам не принадлежит, вы не можете его удалить";
     }
 
-    public static void remove_by_id(Information information) throws SQLException {
+    public synchronized static void remove_by_id(Information information) throws SQLException {
         PreparedStatement preparedStatement = Connect.connection.prepareStatement("DELETE FROM mytabl  WHERE id=?");
         preparedStatement.setInt(1, Integer.parseInt(information.idstr));
         preparedStatement.executeUpdate();
     }
-    public static void clear(Information information) throws SQLException {
+    public synchronized static void clear(Information information) throws SQLException {
         PreparedStatement preparedStatement=Connect.connection.prepareStatement("DELETE FROM mytabl where login=?");
         preparedStatement.setString(1,information.login);
         preparedStatement.executeUpdate();

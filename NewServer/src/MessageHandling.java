@@ -1,9 +1,13 @@
-import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.SocketAddress;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
 /**
@@ -15,14 +19,20 @@ public class MessageHandling {
     private static final SerializationManager<Information> serializationManager = new SerializationManager<>();
     static ArrayList<User> UserList = new ArrayList<>();
 
-    public static void AcceptedFile(byte[] buffer) throws Exception {
-        Answer answer = new Answer();
-        Information information = serializationManager.readObject(buffer);
-        if (UserNumber.contains(Server.datagramPacket.getSocketAddress()) == false) {
-            Logger.login(Level.INFO, "Подключается новый клиент с адресом: " + Server.datagramPacket.getSocketAddress());
-            UserNumber.add(Server.datagramPacket.getSocketAddress());
+    public synchronized static void AcceptedFile(byte[] buffer,SocketAddress socketAddress) throws SQLException, NoSuchAlgorithmException {
+        Information information = null;
+        try {
+            information = serializationManager.readObject(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (UserNumber.contains(socketAddress) == false) {
+            Logger.login(Level.INFO, "Подключается новый клиент с адресом: " + socketAddress);
+            UserNumber.add(socketAddress);
             User user = new User();
-            user.number = Server.datagramPacket.getSocketAddress();
+            user.number = socketAddress;
             if (Command.isExistingUser(information.login,information.pass).equals("NOTHING") && information.regtype.equalsIgnoreCase("reg")) {
                 Logger.login(Level.INFO,"Зарегестрировался пользователь с логином: "+information.login);
                 Command.registrationUser(information.login,information.pass);
@@ -37,15 +47,18 @@ public class MessageHandling {
             } else AllCmd.answerr.autorizatonflag = "fail";
 
         } else
-            Logger.login(Level.INFO, "Пришел запрос от клиента с адресом: " + Server.datagramPacket.getSocketAddress());
-        if (information.cmdtype.equalsIgnoreCase("file")) {
+            Logger.login(Level.INFO, "Пришел запрос от клиента с адресом: " + socketAddress);
+       /* if (information.cmdtype.equalsIgnoreCase("file")) {
             ByteArrayInputStream fileInputStream = new ByteArrayInputStream(information.file);
             XMLReader.main(fileInputStream);
         }
+
+        */
     }
 
-    public static void Handling(byte[] buffer) throws Exception {
+    public synchronized static void Handling(byte[] buffer,SocketAddress socketAddress) throws Exception {
         //   StudyGroupPriorityQueue = XMLReader.StudyGroupPriorityQueue;
+        Thread.sleep(10);
         Information information = serializationManager.readObject(buffer);
 
         if (information.cmdtype.equalsIgnoreCase("help")) {
@@ -120,6 +133,30 @@ public class MessageHandling {
                 }
                catch (NullPointerException e){}
             }
+        Answer answer=AllCmd.answerr;
+        Server.sendler(answer,socketAddress);
+        }
+        public synchronized static void HandlingThread(byte[] buffer,SocketAddress socketAddress){
+            ExecutorService service= Executors.newFixedThreadPool(1);
+            Runnable task1=()->{
+                try {
+                    AcceptedFile(buffer,socketAddress);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+            };
+            Runnable task2=()->{
+                try {
+                    Handling(buffer,socketAddress);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            };
+            service.submit(task1);
+            service.submit(task2);
+            service.shutdown();
         }
     }
 
